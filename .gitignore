@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.vercel/
+*.db
+*.db-*
+*.sqlite*
+*.log
+coverage/
+.tmp/
+backups/
+output/

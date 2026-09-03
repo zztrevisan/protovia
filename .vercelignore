@@ -1,0 +1,10 @@
+.git/
+.env
+.env.*
+node_modules/
+tests/
+scripts/
+*.db
+*.db-*
+*.log
+.tmp/
