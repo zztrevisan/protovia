@@ -3,9 +3,9 @@
   const overlay = document.createElement('dialog');
   overlay.id = 'installationDialog';
   overlay.innerHTML = `<form id="installationForm"><h2 id="installationTitle">Configurar Protovia</h2>
-    <p>Defina a identidade desta instalação e seu primeiro acesso.</p>
-    <label>Nome da organização<input name="organizacao" required maxlength="120"></label>
-    <label>Logo (opcional, PNG/JPEG/WebP, até 500 KB)<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label>
+    <p>Cadastre a identidade do cliente. A marca ProtoVia continuará visível como responsável pelo produto.</p>
+    <label>Nome do cliente ou organização<input name="organizacao" required maxlength="120" placeholder="Ex.: Empresa Cliente"></label>
+    <label>Logo do cliente (opcional, PNG/JPEG/WebP, até 500 KB)<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label>
     <div id="installationCredentials">
       <label>Seu nome<input name="nome" maxlength="120" autocomplete="name"></label>
       <label>Login do administrador<input name="usuario" autocomplete="username" pattern="[a-z0-9_.-]{3,60}"></label>
@@ -23,11 +23,14 @@
   const form = document.getElementById('installationForm');
   function apply(data) {
     settings = data;
-    document.querySelectorAll('img[src="/brand.png"],img[data-organization-logo]').forEach(img => {
-      img.dataset.organizationLogo = 'true'; img.src = data.logo || '/brand.png'; img.alt = data.nome;
+    document.querySelectorAll('[data-customer-logo]').forEach(img => {
+      img.hidden = !data.logo;
+      if (data.logo) { img.src = data.logo; img.alt = `Logo de ${data.nome}`; }
     });
-    document.querySelectorAll('[data-organization-name]').forEach(el => { el.textContent = data.nome; });
+    document.querySelectorAll('[data-customer-name]').forEach(el => { el.textContent = data.nome; });
+    document.querySelectorAll('[data-customer-context]').forEach(el => { el.hidden = !data.configured; });
     window.protoviaOrganization = data;
+    window.protoviaCustomer = data;
   }
   function open() {
     form.elements.organizacao.value = settings.nome;
@@ -57,7 +60,7 @@
     } catch (error) { document.getElementById('installationError').textContent=error.message; }
     finally { button.disabled=false; }
   };
-  const button = document.createElement('button'); button.className='organization-settings-button'; button.type='button'; button.textContent='Identidade da organização'; button.hidden=true; button.onclick=open;
+  const button = document.createElement('button'); button.className='organization-settings-button'; button.type='button'; button.textContent='Identidade do cliente'; button.hidden=true; button.onclick=open;
   document.querySelector('.side')?.append(button);
   setInterval(() => { button.hidden = typeof isAdmin !== 'function' || !isAdmin(); }, 1000);
   fetch('/api/installation', {cache:'no-store'}).then(async response => {

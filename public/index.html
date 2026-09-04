@@ -80,6 +80,7 @@ input[readonly],textarea[readonly],select:disabled{background:#f3f8f7;color:#4b6
 .protocol{background:#fff;border:1px solid #111;margin-top:16px}.ph{display:grid;grid-template-columns:210px 1fr;border-bottom:1px solid #111}
 .plogo{padding:16px;display:flex;align-items:center;justify-content:center;border-right:1px solid #111}.plogo img{max-width:175px}
 .company{text-align:center;padding:18px;font-size:12px;line-height:1.6}.company b{font-size:16px}
+.customer-context{display:flex;align-items:center;gap:8px;margin:0 6px 18px;padding:9px 10px;border:1px solid rgba(255,255,255,.13);border-radius:10px;color:#dff6f1;font-size:11px}.customer-context img{width:32px;height:32px;object-fit:contain;background:#fff;border-radius:6px;padding:3px}.customer-context small{display:block;color:#87b8af;font-size:9px;text-transform:uppercase;letter-spacing:.08em}.product-credit{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:8px;padding-top:7px;border-top:1px solid #c8d8d5;font-size:9px;color:#56746f}.product-credit img{width:52px!important;max-height:25px!important;object-fit:contain}.customer-print-logo[hidden]{display:none!important}
 .prow{padding:12px 16px;border-bottom:1px solid #111}.two{display:grid;grid-template-columns:1fr 1fr}.two>div{padding:12px 16px}.two>div+div{border-left:1px solid #111}
 .desc{min-height:190px}.sign{display:grid;grid-template-columns:1fr 1fr}.sign>div{min-height:130px;padding:15px}.sign>div+div{border-left:1px solid #111}
 .sign img{max-width:240px;max-height:90px;display:block;margin-top:8px}
@@ -3524,6 +3525,7 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
         <img src="/brand.png" alt="Protovia">
         </div>
         <div class="login-environment">AMBIENTE INTERNO</div>
+        <div class="customer-context" data-customer-context hidden><img data-customer-logo hidden alt=""><div><small>Ambiente de</small><strong data-customer-name>Sua organização</strong></div></div>
       </div>
 
       <div class="login-hero-copy">
@@ -3599,7 +3601,8 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
 
 <div class="app auth-hidden" id="appRoot">
 <aside class="side">
-  <div class="brand"><img src="/brand.png"></div>
+  <div class="brand"><img src="/brand.png" alt="ProtoVia"></div>
+  <div class="customer-context" data-customer-context hidden><img data-customer-logo hidden alt=""><div><small>Ambiente de</small><strong data-customer-name>Sua organização</strong></div></div>
   <div class="menu-section-title">Operação</div>
   <button class="menu-btn active" data-view="dashboard" data-access="all" onclick="show('dashboard',this)">Visão geral</button>
   <button class="menu-btn" data-view="requests" data-access="all" onclick="show('requests',this)">Solicitações</button>
@@ -3880,7 +3883,7 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
   </div>
   <div id="printArea">
     <div class="protocol">
-      <div class="ph"><div class="plogo"><img src="/brand.png"></div><div class="company" data-organization-name>Protovia</div></div>
+      <div class="ph"><div class="plogo"><img class="customer-print-logo" data-customer-logo hidden alt=""><span data-customer-name>Sua organização</span></div><div class="company"><b>PROTOCOLO DE ENTREGA</b><div class="product-credit">Tecnologia e rastreabilidade por <img src="/brand.png" alt="ProtoVia"></div></div></div>
       <div class="prow"><b>CLIENTE:</b> <span id="pvCli"></span></div>
       <div class="prow"><b>ENDEREÇO:</b> <span id="pvEndereco"></span></div>
       <div class="two prow" style="padding:0"><div><b>DEPARTAMENTO:</b> <span id="pvDept"></span></div><div><b>PROTOCOLO Nº:</b> <span id="pvNum"></span> &nbsp; <b>EMISSÃO:</b> <span id="pvEmit"></span><br><b>EMITIDO POR:</b> <span id="pvEmissor"></span></div></div>
@@ -5722,17 +5725,20 @@ async function imprimirEtiquetasProtocolos(ids,posicaoInicial=1,opcoes={}){
       if(!resposta.ok)throw new Error(etiqueta.erro||'Não foi possível gerar uma das etiquetas.');
       return etiqueta;
     }));
-    const logo=document.querySelector('.plogo img')?.src||'';
+    const cliente=window.protoviaCustomer||window.protoviaOrganization||{};
+    const customerLogo=cliente.logo||'';
+    const customerName=cliente.nome||'Sua organização';
+    const productLogo=new URL('/brand.png',location.origin).href;
     if(opcoes.modo==='envelope'){
       const tamanhos={DL:[220,110],C5:[229,162],B5:[250,176],N10:[241,105],MONARCH:[191,98]};
       const tamanho=tamanhos[opcoes.tamanhoEnvelope]||tamanhos.DL;
       const paginas=dados.map(item=>{
         const documentos=(item.itens||[]).map(documento=>`<li><span>${esc(documento.descricao)}</span>${documento.vencimento?`<strong class="doc-due">Venc. ${esc(formatDueDate(documento.vencimento))}</strong>`:''}</li>`).join('');
-        return `<main class="envelope"><div class="logo-area">${logo?`<img src="${logo}">`:''}</div><section class="identity"><div class="company">${esc(item.cliente)}</div><div class="number">PROTOCOLO ${fmtNum(item.numero)}</div></section><aside class="qr"><div class="qr-content"><img src="${item.qr_data_url}"><small>Conferência da entrega</small></div></aside><section class="documents"><div class="docs-title">DOCUMENTOS</div><ul class="docs">${documentos}</ul></section></main>`;
+        return `<main class="envelope"><div class="logo-area">${customerLogo?`<img src="${customerLogo}" alt="${esc(customerName)}">`:`<strong>${esc(customerName)}</strong>`}</div><section class="identity"><div class="company">${esc(item.cliente)}</div><div class="number">PROTOCOLO ${fmtNum(item.numero)}</div><div class="powered">Tecnologia por <img src="${productLogo}" alt="ProtoVia"></div></section><aside class="qr"><div class="qr-content"><img src="${item.qr_data_url}"><small>Conferência da entrega</small></div></aside><section class="documents"><div class="docs-title">DOCUMENTOS</div><ul class="docs">${documentos}</ul></section></main>`;
       }).join('');
       janela.document.open();
       janela.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Protocolos em envelopes</title><style>
-        @page{size:${tamanho[0]}mm ${tamanho[1]}mm;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:Arial,sans-serif;color:#103f37}.envelope{width:${tamanho[0]}mm;height:${tamanho[1]}mm;padding:8mm 10mm;display:grid;grid-template-columns:48mm minmax(0,1fr) 39mm;grid-template-rows:42mm minmax(0,1fr);column-gap:6mm;align-items:center;break-after:page;overflow:hidden}.envelope:last-child{break-after:auto}.logo-area{grid-column:1;grid-row:1;display:flex;align-items:center;justify-content:flex-start;height:42mm}.logo-area img{width:45mm;height:34mm;object-fit:contain;object-position:left center}.identity{grid-column:2;grid-row:1;min-width:0;align-self:center}.company{font-size:20px;line-height:1.15;font-weight:850;white-space:normal;overflow-wrap:anywhere}.number{font-size:13px;font-weight:750;letter-spacing:.065em;color:#40746b;text-transform:uppercase;margin-top:3mm}.documents{grid-column:1/3;grid-row:2;align-self:start;border-top:1px solid #bdd2cf;padding:4mm 3mm 0 1mm}.docs-title{font-size:9px;font-weight:850;letter-spacing:.14em;color:#52827a}.docs{display:block;font-size:11px;margin:2.5mm 0 0;padding-left:5mm;line-height:1.35}.docs li{margin-bottom:1.5mm;padding-right:2mm;break-inside:avoid}.doc-due{display:inline-block;margin-left:2mm;color:#40766d;font-size:9px;font-weight:800;white-space:nowrap}.qr{grid-column:3;grid-row:1/3;align-self:stretch;display:flex;align-items:center;justify-content:center;border-left:1px solid #9fb8b4;padding-left:5mm}.qr-content{display:flex;flex-direction:column;align-items:center;justify-content:center}.qr img{width:34mm;height:34mm}.qr small{font-size:8px;font-weight:650;line-height:1.25;text-align:center;margin-top:2mm;color:#527a73}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+        @page{size:${tamanho[0]}mm ${tamanho[1]}mm;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:Arial,sans-serif;color:#103f37}.envelope{width:${tamanho[0]}mm;height:${tamanho[1]}mm;padding:8mm 10mm;display:grid;grid-template-columns:48mm minmax(0,1fr) 39mm;grid-template-rows:42mm minmax(0,1fr);column-gap:6mm;align-items:center;break-after:page;overflow:hidden}.envelope:last-child{break-after:auto}.logo-area{grid-column:1;grid-row:1;display:flex;align-items:center;justify-content:flex-start;height:42mm;font-size:16px;font-weight:800}.logo-area img{width:45mm;height:34mm;object-fit:contain;object-position:left center}.identity{grid-column:2;grid-row:1;min-width:0;align-self:center}.company{font-size:20px;line-height:1.15;font-weight:850;white-space:normal;overflow-wrap:anywhere}.number{font-size:13px;font-weight:750;letter-spacing:.065em;color:#40746b;text-transform:uppercase;margin-top:3mm}.powered{display:flex;align-items:center;gap:2mm;margin-top:4mm;font-size:7px;color:#66827d}.powered img{width:18mm;height:9mm;object-fit:contain}.documents{grid-column:1/3;grid-row:2;align-self:start;border-top:1px solid #bdd2cf;padding:4mm 3mm 0 1mm}.docs-title{font-size:9px;font-weight:850;letter-spacing:.14em;color:#52827a}.docs{display:block;font-size:11px;margin:2.5mm 0 0;padding-left:5mm;line-height:1.35}.docs li{margin-bottom:1.5mm;padding-right:2mm;break-inside:avoid}.doc-due{display:inline-block;margin-left:2mm;color:#40766d;font-size:9px;font-weight:800;white-space:nowrap}.qr{grid-column:3;grid-row:1/3;align-self:stretch;display:flex;align-items:center;justify-content:center;border-left:1px solid #9fb8b4;padding-left:5mm}.qr-content{display:flex;flex-direction:column;align-items:center;justify-content:center}.qr img{width:34mm;height:34mm}.qr small{font-size:8px;font-weight:650;line-height:1.25;text-align:center;margin-top:2mm;color:#527a73}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
       </style></head><body>${paginas}<script>addEventListener('load',()=>setTimeout(()=>print(),250));<\/script></body></html>`);
       janela.document.close();
       return;
@@ -5740,7 +5746,7 @@ async function imprimirEtiquetasProtocolos(ids,posicaoInicial=1,opcoes={}){
     const inicio=Math.max(1,Math.min(8,Number(posicaoInicial)||1));
     const blocos=dados.map(item=>{
       const documentos=(item.itens||[]).map(documento=>`<li><span>${esc(documento.descricao)}</span>${documento.vencimento?`<strong class="doc-due">Venc. ${esc(formatDueDate(documento.vencimento))}</strong>`:''}</li>`).join('');
-      return `<div class="slot"><div class="label"><div><div class="brand">${logo?`<img src="${logo}">`:''}<div><strong>PROTOVIA</strong><div class="number">PROTOCOLO ${fmtNum(item.numero)}</div></div></div><div class="company">${esc(item.cliente)}</div><ul class="docs">${documentos}</ul></div><div class="qr"><img src="${item.qr_data_url}"><small>Conferência da entrega</small></div></div></div>`;
+      return `<div class="slot"><div class="label"><div><div class="brand">${customerLogo?`<img src="${customerLogo}" alt="${esc(customerName)}">`:''}<div><strong>${esc(customerName)}</strong><div class="number">PROTOCOLO ${fmtNum(item.numero)}</div></div></div><div class="company">${esc(item.cliente)}</div><ul class="docs">${documentos}</ul><div class="powered">Tecnologia por <img src="${productLogo}" alt="ProtoVia"></div></div><div class="qr"><img src="${item.qr_data_url}"><small>Conferência da entrega</small></div></div></div>`;
     });
     const folhas=[];
     let restantes=[...blocos];
@@ -5750,7 +5756,7 @@ async function imprimirEtiquetasProtocolos(ids,posicaoInicial=1,opcoes={}){
     const conteudo=folhas.map(folha=>`<main class="sheet">${folha}</main>`).join('');
     janela.document.open();
     janela.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Etiquetas de protocolos</title><style>
-      @page{size:A4 portrait;margin:10mm}*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:Arial,sans-serif;color:#103f37}.sheet{width:190mm;min-height:277mm;display:grid;grid-template-columns:92mm 92mm;grid-template-rows:repeat(4,62mm);column-gap:6mm;row-gap:5mm;align-content:start;break-after:page}.sheet:last-child{break-after:auto}.slot{width:92mm;height:62mm;display:flex;align-items:flex-start;justify-content:flex-start}.slot.empty{visibility:hidden}.label{width:92mm;height:60mm;border:1px solid #9bb7b2;border-radius:3mm;padding:4mm;display:grid;grid-template-columns:1fr 27mm;gap:3mm;overflow:hidden;break-inside:avoid}.brand{display:flex;align-items:center;gap:3mm;border-bottom:1px solid #dce9e7;padding-bottom:2mm}.brand img{width:18mm;height:12mm;object-fit:contain}.brand strong{font-size:12px;letter-spacing:.06em}.number{font-size:10px;color:#557771}.company{font-size:15px;font-weight:800;margin:2.5mm 0 1.5mm}.docs{font-size:8.5px;margin:0;padding-left:4mm;line-height:1.3}.docs li{margin-bottom:.7mm}.doc-due{display:inline-block;margin-left:1.5mm;color:#376860;font-size:7.5px;white-space:nowrap}.qr{display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid #dce9e7;padding-left:3mm}.qr img{width:24mm;height:24mm}.qr small{font-size:7px;text-align:center;margin-top:1mm}@media print{.label{border-color:#777}}
+      @page{size:A4 portrait;margin:10mm}*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:Arial,sans-serif;color:#103f37}.sheet{width:190mm;min-height:277mm;display:grid;grid-template-columns:92mm 92mm;grid-template-rows:repeat(4,62mm);column-gap:6mm;row-gap:5mm;align-content:start;break-after:page}.sheet:last-child{break-after:auto}.slot{width:92mm;height:62mm;display:flex;align-items:flex-start;justify-content:flex-start}.slot.empty{visibility:hidden}.label{width:92mm;height:60mm;border:1px solid #9bb7b2;border-radius:3mm;padding:4mm;display:grid;grid-template-columns:1fr 27mm;gap:3mm;overflow:hidden;break-inside:avoid}.brand{display:flex;align-items:center;gap:3mm;border-bottom:1px solid #dce9e7;padding-bottom:2mm}.brand img{width:18mm;height:12mm;object-fit:contain}.brand strong{font-size:10px;letter-spacing:.03em}.number{font-size:10px;color:#557771}.company{font-size:15px;font-weight:800;margin:2.5mm 0 1.5mm}.docs{font-size:8.5px;margin:0;padding-left:4mm;line-height:1.3}.docs li{margin-bottom:.7mm}.doc-due{display:inline-block;margin-left:1.5mm;color:#376860;font-size:7.5px;white-space:nowrap}.powered{display:flex;align-items:center;gap:1.5mm;margin-top:2mm;font-size:6px;color:#6b8580}.powered img{width:15mm;height:7mm;object-fit:contain}.qr{display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid #dce9e7;padding-left:3mm}.qr img{width:24mm;height:24mm}.qr small{font-size:7px;text-align:center;margin-top:1mm}@media print{.label{border-color:#777}}
     </style></head><body>${conteudo}<script>addEventListener('load',()=>setTimeout(()=>print(),220));<\/script></body></html>`);
     janela.document.close();
   }catch(erro){

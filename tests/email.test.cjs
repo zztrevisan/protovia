@@ -11,4 +11,5 @@ test('aviso usa identidade da instalação, contagem e data brasileira sem envia
   t.mock.method(global,'fetch',async(url,options)=>{assert.equal(url,'https://api.resend.com/emails');payload=JSON.parse(options.body);return {ok:true,json:async()=>({id:'test-id'})};});
   const result=await email.enviarNotificacaoNovoProtocolo({protocolo:{numero:1,cliente:'Cliente Teste',emissor:'Emissor Teste',departamento:'Fiscal'},itens:[{descricao:'Documento',vencimento:'2026-09-10'}],destinatario:'entregador@example.com',totalPendentes:2});
   assert.equal(result.status,'enviado');assert.match(payload.html,/Organização &lt;Teste&gt;/);assert.match(payload.html,/10\/09\/2026/);assert.match(payload.subject,/2/);assert.doesNotMatch(payload.html,/hiperion|imperium/i);
+  assert.match(payload.html,/ProtoVia/i);
 });

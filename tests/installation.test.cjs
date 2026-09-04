@@ -37,7 +37,7 @@ test('instalação protegida, login, identidade e emissão com banco vazio', {ti
       const errors=[]; page.on('pageerror',error=>errors.push(error.message));
       await page.goto(origin);
       await page.locator('#installationDialog[open]').waitFor();
-      assert.equal(await page.locator('#installationForm input[name="organizacao"]').inputValue(),'Protovia');
+      assert.equal(await page.locator('#installationForm input[name="organizacao"]').inputValue(),'Sua organização');
       assert.deepEqual(errors,[]);
       if (process.env.PROTOVIA_SCREENSHOT) await page.screenshot({path:process.env.PROTOVIA_SCREENSHOT});
     } finally { await browser.close(); }
