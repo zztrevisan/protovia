@@ -594,6 +594,8 @@ async function sincronizarFila(){
 
                 body:JSON.stringify({
 
+                  localizacao_entrega: item.localizacao_entrega,
+                  justificativa_sem_gps: item.justificativa_sem_gps,
                   recebido_por:
                     item.recebido_por,
 

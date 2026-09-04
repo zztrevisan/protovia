@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS clientes (
     atualizado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   , emails_json TEXT NOT NULL DEFAULT '[]');
 
+CREATE TABLE IF NOT EXISTS configuracao_entrega (id INTEGER PRIMARY KEY CHECK (id = 1), regras_json TEXT NOT NULL, alterado_por TEXT NOT NULL, alterado_em TEXT NOT NULL);
+
 CREATE TABLE IF NOT EXISTS organizacao (id INTEGER PRIMARY KEY CHECK (id = 1), nome TEXT NOT NULL, logo TEXT NOT NULL DEFAULT '');
 
 CREATE TABLE IF NOT EXISTS protocolo_itens (
@@ -73,7 +75,7 @@ CREATE TABLE IF NOT EXISTS protocolos (
       DEFAULT CURRENT_TIMESTAMP,
 
     entregue_em TEXT
-  , motivo_cancelamento TEXT, cancelado_por TEXT, cancelado_em TEXT, excluido INTEGER NOT NULL DEFAULT 0, excluido_em TEXT, excluido_por TEXT, endereco_empresa TEXT, cliente_id INTEGER, cliente_box TEXT, qr_token TEXT, qr_obrigatorio INTEGER NOT NULL DEFAULT 0, qr_confirmado_em TEXT, qr_confirmado_por TEXT, confirmacao_entrega_metodo TEXT, confirmacao_numero_digitado TEXT, email_destinatarios TEXT, email_status TEXT, email_enviado_em TEXT, email_erro TEXT, notificacao_entregador_destinatario TEXT, notificacao_entregador_status TEXT, notificacao_entregador_enviada_em TEXT, notificacao_entregador_erro TEXT);
+  , motivo_cancelamento TEXT, cancelado_por TEXT, cancelado_em TEXT, excluido INTEGER NOT NULL DEFAULT 0, excluido_em TEXT, excluido_por TEXT, endereco_empresa TEXT, cliente_id INTEGER, cliente_box TEXT, qr_token TEXT, qr_obrigatorio INTEGER NOT NULL DEFAULT 0, qr_confirmado_em TEXT, qr_confirmado_por TEXT, confirmacao_entrega_metodo TEXT, confirmacao_numero_digitado TEXT, email_destinatarios TEXT, email_status TEXT, email_enviado_em TEXT, email_erro TEXT, notificacao_entregador_destinatario TEXT, notificacao_entregador_status TEXT, notificacao_entregador_enviada_em TEXT, notificacao_entregador_erro TEXT, entrega_evidencia_json TEXT);
 
 CREATE TABLE IF NOT EXISTS sessoes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

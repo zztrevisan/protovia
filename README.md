@@ -1,5 +1,13 @@
 # Protovia
 
+## Configurações de entrega
+
+O menu **Configurações de entrega** é exclusivo de administradores. Permite desligar o GPS, exigi-lo ou permitir ausência com justificativa de 10 a 1.000 caracteres. Também permite ligar/desligar a conferência por QR e a alternativa pelo número. Nome e assinatura continuam obrigatórios.
+
+O padrão mantém GPS desligado, QR ligado e número permitido em emergência. As regras são aplicadas no servidor, inclusive na sincronização. É necessário consultar as regras online antes de confirmar; se a conexão cair depois, a fila preserva a evidência e o servidor revalida no envio.
+
+GPS é coletado pontualmente, com permissão do navegador, em HTTPS ou localhost. A precisão depende do aparelho e não comprova presença de forma absoluta. O administrador consulta coordenadas, precisão e horário em **Protocolos entregues → abrir protocolo → Ver registro de localização**. Não são enviados no comprovante, no e-mail ou na listagem geral. Abrir o link Google Maps compartilha as coordenadas com esse provedor.
+
 Gestão de protocolos, documentos e entregas, com confirmação por assinatura e QR Code.
 
 Esta versão inicia sem empresas, usuários ou protocolos. Cada instalação pertence a uma organização e usa banco, credenciais e domínio próprios. Não é um serviço multiempresa com isolamento de locatários no mesmo banco.

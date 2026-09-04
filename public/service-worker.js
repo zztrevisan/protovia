@@ -4,13 +4,14 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v77-email-layout';
+  'protovia-protocolos-v78-delivery-settings';
 
 
 const APP_SHELL = [
   '/',
   '/index.html',
   '/offline.js',
+  '/delivery-settings.js',
   '/installation.js',
   '/brand.svg',
   '/vendor/qr-scanner.umd.min.js',

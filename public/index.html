@@ -6129,6 +6129,7 @@ async function openDelivery(id){
 
 
 function setProtocolMode(readOnly){
+  document.getElementById('deliveryLocationButton')?.remove();
   protocolReadOnly=Boolean(readOnly);
 
   const formCard=document.querySelector('#protocol .card.no-print');
@@ -6269,6 +6270,8 @@ atualizarEnderecoProtocolo(p.endereco||'');
   renderProtocolItems(itens);
   if(p.sign)$('pvSign').src=p.sign;else $('pvSign').removeAttribute('src');
 
+  document.getElementById('deliveryLocationButton')?.remove();
+  if(isAdmin()){const b=document.createElement('button');b.id='deliveryLocationButton';b.className='delivery-location-button no-print';b.textContent='Ver registro de localização ↗';b.onclick=()=>window.showDeliveryLocation(p.id);document.getElementById('protocol').prepend(b);}
   show('protocol');
 }
 
@@ -6454,13 +6457,19 @@ async function confirmProtocol(){
     return;
   }
 
+  let regrasEntrega;
+  try { regrasEntrega=await window.deliveryRules.fetchPolicy(); }
+  catch(e){alert('Conecte-se ao servidor para consultar as regras antes de confirmar a entrega.');return;}
   let qrCodigo=null;
   let numeroConfirmacao=null;
-  if(r.qrRequired){
+  if(regrasEntrega.qrRequired){
+    const manualButton=document.querySelector('#qrReaderModal button[onclick="usarNumeroProtocoloNaConferencia()"]');
+    if(manualButton)manualButton.hidden=!regrasEntrega.manualNumberAllowed;
     const conferencia=await lerQrDaEtiqueta();
     if(!conferencia)return;
 
     if(conferencia===CONFIRMACAO_MANUAL_PROTOCOLO){
+      if(!regrasEntrega.manualNumberAllowed){alert('A conferência manual está desativada pelo administrador. Escaneie o QR Code.');return;}
       const digitado=await protoviaPrompt({title:'Confirmação de emergência',message:`Digite o número do protocolo que está sendo entregue. Você pode informar ${fmtNum(r.num)} ou ${Number(r.num)}.`,inputLabel:'Número do protocolo',confirmText:'Conferir número',cancelText:'Voltar',type:'warning'});
       if(digitado===null)return;
       const numeroLimpo=String(digitado).trim();
@@ -6482,9 +6491,13 @@ async function confirmProtocol(){
   const emailDestinatarios=await confirmarEmailsDaEntrega(r);
   if(emailDestinatarios===null)return;
 
+  let gpsEntrega;
+  try { gpsEntrega=await window.deliveryRules.capture(regrasEntrega); }
+  catch(e){alert(e.message);return;}
   const entregueEmLocal=new Date().toISOString();
 
   const payload={
+    ...gpsEntrega,
     protocolo_id:r.id,
     protocolo_numero:r.num,
     recebido_por:recebidoPor,
@@ -6505,6 +6518,7 @@ async function confirmProtocol(){
           method:'PUT',
           headers:{'Content-Type':'application/json'},
           body:JSON.stringify({
+            ...gpsEntrega,
             recebido_por:recebidoPor,
             assinatura:signedData,
             entregue_em_local:entregueEmLocal,
@@ -7773,5 +7787,6 @@ iniciarSistema();
 
 
 <script src="/installation.js"></script>
+<script src="/delivery-settings.js"></script>
 </body>
 </html>
