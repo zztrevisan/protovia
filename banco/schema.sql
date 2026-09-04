@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS retiradas (
     entregador_id INTEGER NOT NULL, entregador_nome TEXT NOT NULL,
     solicitado_em TEXT NOT NULL, retirado_em TEXT, conferido_em TEXT,
     conferente_id INTEGER, conferente_nome TEXT, estado TEXT NOT NULL,
-    documentos_json TEXT NOT NULL, conferencia_json TEXT, observacao TEXT NOT NULL
+    documentos_json TEXT NOT NULL, conferencia_json TEXT, observacao TEXT NOT NULL, contexto_json TEXT
   );
 
 CREATE TABLE IF NOT EXISTS sessoes (

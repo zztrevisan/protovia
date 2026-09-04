@@ -3602,8 +3602,8 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
   <div class="brand"><img src="/brand.svg"></div>
   <div class="menu-section-title">Operação</div>
   <button class="menu-btn active" data-view="dashboard" data-access="all" onclick="show('dashboard',this)">Visão geral</button>
-  <button class="menu-btn" data-view="requests" data-access="admin,emissor" onclick="show('requests',this)">Solicitações</button>
-  <button class="menu-btn" data-view="new" data-access="admin,emissor" onclick="show('new',this)">Nova solicitação</button>
+  <button class="menu-btn" data-view="requests" data-access="all" onclick="show('requests',this)">Solicitações</button>
+  <button class="menu-btn" data-view="new" data-access="all" onclick="show('new',this)">Nova solicitação</button>
   <button class="menu-btn" data-view="deliveries" data-access="admin,entregador" onclick="show('deliveries',this)">Minhas entregas</button>
   <button class="menu-btn" data-view="completed" data-access="all" onclick="show('completed',this)">Protocolos entregues</button>
   <button class="menu-btn" data-view="companies" data-access="all" onclick="show('companies',this)">Empresas</button>
@@ -3680,12 +3680,12 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
   </div>
 </section>
 
-<section id="requests" class="view" data-view-access="admin,emissor">
+<section id="requests" class="view">
   <div class="card">
     <div class="kicker">Escritório</div><h2>Solicitações / protocolos gerados</h2>
     <div class="searchbar">
       <input id="reqSearch" placeholder="Pesquisar protocolo, empresa, box, documento ou responsável..." oninput="renderRequests()">
-      <select id="reqStatus" onchange="renderRequests()"><option value="">Todos os status</option><option>Aguardando entrega</option><option>Em entrega</option><option>Entregue</option><option>Cancelado</option></select>
+      <select id="reqStatus" onchange="renderRequests()"><option value="">Todos os status</option><option>Aguardando entrega</option><option>Em entrega</option><option>Cancelado</option></select>
     </div>
     <div class="label-batch-bar">
       <span id="labelBatchCount" class="label-batch-count">Selecione protocolos diferentes para imprimir as etiquetas juntas.</span>
@@ -3695,7 +3695,7 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
   </div>
 </section>
 
-<section id="new" class="view" data-view-access="admin,emissor">
+<section id="new" class="view">
   <div class="page-section-head">
     <div>
       <div class="kicker">Emissão</div>
@@ -3830,6 +3830,7 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
         <option>Administrativo</option>
       </select>
     </div>
+    <button class="primary secondary" type="button" onclick="abrirEtiquetasSelecionadas()">Imprimir etiquetas selecionadas</button>
     <div id="completedList"></div>
   </div>
 </section>
@@ -4640,7 +4641,8 @@ function applyPermissions(){
 
 let ultimaTelaAntesProtocolo='deliveries';
 
-function show(id,btn){
+function show(id,btn,skipChoice=false){
+  if(id==='new' && !skipChoice && window.pickupRequests){window.pickupRequests.choose();return;}
   if(!canAccess(id)){
     alert('Este usuário não tem acesso a esta tela.');
     id='dashboard';
@@ -5757,7 +5759,7 @@ async function imprimirEtiquetasProtocolos(ids,posicaoInicial=1,opcoes={}){
 }
 
 async function createRequest(){
-  if(!hasRole('emissor')){
+  if(!currentUser().id){
     alert('Este usuário não pode criar solicitações.');
     return;
   }
@@ -5876,7 +5878,7 @@ function protocolMatchesSearch(p,query){
 function visibleRequestsForUser(){
   let u=currentUser();
   if(isOperationalAdmin())return requests;
-  if(u.roles.includes('emissor'))return requests.filter(r=>r.emissorId===u.id || r.emissor===u.name);
+  return requests.filter(r=>r.emissorId===u.id || r.emissor===u.name);
   return [];
 }
 
@@ -5907,7 +5909,7 @@ function renderRequests(){
   const buscaGlobalPorNumero=/^#?\d+$/.test(q.trim());
   const base=buscaGlobalPorNumero?requests:visibleRequestsForUser();
   const list=base.filter(r=>{
-    return (!st||r.status===st)&&protocolMatchesSearch(r,q);
+    return r.status!=='Entregue'&&(!st||r.status===st)&&protocolMatchesSearch(r,q);
   });
 
   $('requestList').innerHTML=list.map(r=>{
@@ -6193,7 +6195,9 @@ function renderCompleted(){
       </div>
       <div class="statusline">
         ${statusBadge('Entregue')}
+        <label><input type="checkbox" aria-label="Selecionar etiqueta do protocolo ${fmtNum(p.num)}" ${etiquetasSelecionadas.has(Number(p.id))?'checked':''} onchange="alternarEtiquetaSelecionada(${p.id},this.checked)"> Etiqueta</label>
         <button class="primary smallbtn" onclick="openCompletedProtocol(${p.num})">Abrir protocolo</button>
+        ${isAdmin()?`<button class="primary danger smallbtn" onclick="deleteProtocol(${p.id})">Excluir</button>`:''}
       </div>
     </div>`).join('') || '<div class="empty">Nenhum protocolo entregue encontrado.</div>';
 }

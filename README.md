@@ -91,4 +91,4 @@ Using, copying, modifying, redistributing, sublicensing, reselling, or incorpora
 
 ## Módulo opcional de retiradas
 
-O administrador pode ativar **Retiradas** em **Configurações de entrega**. A Legalização solicita a coleta e confere no escritório os documentos recebidos, com data e competência por documento e histórico por empresa, sem emitir protocolo. Consulte [o fluxo e as permissões](docs/retiradas.md).
+O administrador pode ativar **Retiradas** em **Configurações de entrega**. Em **Nova solicitação**, todos os perfis escolhem protocolo ou retirada. O acompanhamento tem listas internas de andamento/conferidas, busca por empresa/box e GPS conforme configuração. A conferência no escritório continua exclusiva da Legalização e administradores. Consulte [o fluxo e as permissões](docs/retiradas.md).

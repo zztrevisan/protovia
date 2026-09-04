@@ -54,4 +54,10 @@ test('API protege configurações e GPS, aplica QR e mantém evidência imutáve
   assert.equal((await api('/api/configuracao-entrega','PUT',rule)).status,403);
   assert.equal((await api(`/api/protocolos/${p.id}/localizacao`)).status,403);
   cookie=adminCookie;
+  const courier=await api('/api/usuarios','POST',{nome:'Entregador Criação Teste',departamento:'Entregas',perfil:'entregador',usuario:'courier-creation',senha:'Test-password-123!'});
+  assert.equal(courier.status,201,JSON.stringify(courier.body));
+  cookie=(await api('/api/login','POST',{usuario:'courier-creation',senha:'Test-password-123!'})).cookie.split(';')[0];
+  assert.equal((await api('/api/protocolos/proximo-numero')).status,200);
+  await newProtocol();
+  assert.equal((await api(`/api/protocolos/${p.id}/excluir`,'PUT',{})).status,403);
 });

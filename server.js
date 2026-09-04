@@ -2335,7 +2335,7 @@ app.get(
 
 app.get(
   '/api/protocolos/proximo-numero',
-  exigirEmissor,
+  exigirLogin,
   (req, res) => {
 
     try {
@@ -2388,7 +2388,7 @@ app.get(
 
 app.post(
   '/api/protocolos',
-  exigirEmissor,
+  exigirLogin,
   async (req, res) => {
 
     const {
@@ -3049,7 +3049,7 @@ app.put(
 // CONFIRMAR ENTREGA + ASSINATURA
 // ============================================================
 
-app.get('/api/protocolos/:id/etiqueta', exigirEmissor, async (req, res) => {
+app.get('/api/protocolos/:id/etiqueta', exigirLogin, async (req, res) => {
   try {
     const id = Number(req.params.id);
     const protocolo = db.prepare('SELECT * FROM protocolos WHERE id = ? AND COALESCE(excluido, 0) = 0').get(id);

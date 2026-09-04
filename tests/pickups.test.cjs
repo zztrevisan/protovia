@@ -19,11 +19,14 @@ test('Conferência preserva solicitados e valida data, competência, faltantes e
 
 for(const optional of [false,true])test(`Retiradas: permissões, etapas, isolamento e módulo ${optional?'opcional':'ativo'}`,async t=>{
   const raw=new DatabaseSync(':memory:');
-  raw.exec(`CREATE TABLE clientes(id INTEGER PRIMARY KEY,nome TEXT,ativo INTEGER);INSERT INTO clientes VALUES(1,'Empresa Teste',1);
+  raw.exec(`CREATE TABLE clientes(id INTEGER PRIMARY KEY,nome TEXT,ativo INTEGER,box TEXT,endereco TEXT,numero TEXT,bairro TEXT,cidade TEXT,uf TEXT);INSERT INTO clientes(id,nome,ativo,box) VALUES(1,'Empresa Teste',1,'802');
+    CREATE TABLE configuracao_entrega(id INTEGER PRIMARY KEY,regras_json TEXT);
     CREATE TABLE usuarios(id INTEGER PRIMARY KEY,nome TEXT,perfil TEXT,departamento TEXT,ativo INTEGER);
     INSERT INTO usuarios VALUES(1,'Admin','admin','Administrativo',1),(2,'Legalização','emissor','Legalização',1),(3,'Entregador','entregador','Entregas',1),(4,'Outro entregador','entregador','Entregas',1),(5,'Fiscal','emissor','Fiscal',1);
     CREATE TABLE protocolos(id INTEGER PRIMARY KEY);`);
   const database=()=>({get:(sql,...args)=>raw.prepare(sql).get(...args),all:(sql,...args)=>raw.prepare(sql).all(...args),run:(sql,...args)=>raw.prepare(sql).run(...args)});
+  // Simula banco já publicado antes da coluna de contexto/GPS.
+  raw.exec(require('../lib/pickups').SCHEMA[1].replace(', contexto_json TEXT',''));
   const app=express();app.use(express.json());
   app.use((req,res,next)=>{req.usuarioLogado=raw.prepare('SELECT * FROM usuarios WHERE id=?').get(Number(req.headers['x-test-user'])||0);if(!req.usuarioLogado)return res.status(401).json({erro:'Login obrigatório'});next();});
   mountPickups(app,{database,optional});const server=app.listen(0,'127.0.0.1');await new Promise(resolve=>server.once('listening',resolve));
@@ -34,10 +37,10 @@ for(const optional of [false,true])test(`Retiradas: permissões, etapas, isolame
   assert.equal((await api(1,'/opcoes')).body.ativo,!optional);
   assert.equal((await api(2,'/opcoes','PUT',{ativo:true})).status,403);
   if(optional){assert.equal((await api(2)).status,403);assert.equal((await api(1,'/opcoes','PUT',{ativo:true})).status,200);}
-  assert.equal((await api(5)).status,403);
+  assert.equal((await api(5)).status,200);
   assert.equal((await api(2,'/cadastros')).body.empresas.length,1);
   const request={empresa_id:1,entregador_id:3,documentos:['Contrato','Alvará'],observacao:'Retirar originais'};
-  assert.equal((await api(3,'','POST',request)).status,403);
+  assert.equal((await api(3,'/cadastros')).status,200);
   assert.equal((await api(2,'','POST',{...request,empresa_id:9})).status,400);
   const created=await api(2,'','POST',request);assert.equal(created.status,201,JSON.stringify(created.body));const id=created.body.id;
   assert.equal(raw.prepare('SELECT COUNT(*) n FROM protocolos').get().n,0);
@@ -48,6 +51,9 @@ for(const optional of [false,true])test(`Retiradas: permissões, etapas, isolame
   const row=(await api(2)).body[0];
   const docs=row.documentos.map((doc,i)=>i?{id:doc.id,recebido:false,justificativa:'Não disponibilizado'}:{id:doc.id,recebido:true,competencia:'2026-09',data_recebimento:'2026-09-04'});
   assert.equal((await api(2,`/${id}/conferir`,'PUT',{documentos:docs})).status,409);
+  raw.prepare('INSERT INTO configuracao_entrega VALUES(1,?)').run(JSON.stringify({gpsMode:'required',qrRequired:true,manualNumberAllowed:false}));
+  assert.equal((await api(3,`/${id}/retirar`,'PUT',{})).status,400);
+  raw.prepare('UPDATE configuracao_entrega SET regras_json=?').run(JSON.stringify({gpsMode:'off',qrRequired:true,manualNumberAllowed:false}));
   assert.equal((await api(3,`/${id}/retirar`,'PUT',{})).status,200);
   assert.equal((await api(3,`/${id}/retirar`,'PUT',{})).status,409);
   assert.equal((await api(3,`/${id}/conferir`,'PUT',{documentos:docs})).status,403);
@@ -55,5 +61,12 @@ for(const optional of [false,true])test(`Retiradas: permissões, etapas, isolame
   const results=await Promise.all([api(2,`/${id}/conferir`,'PUT',{documentos:docs}),api(2,`/${id}/conferir`,'PUT',{documentos:docs})]);
   assert.deepEqual(results.map(result=>result.status).sort(),[200,409]);
   const done=(await api(2)).body[0];assert.equal(done.estado,'conferida');assert.equal(done.conferente_id,2);assert.equal(done.documentos.length,2);assert.equal(done.conferencia[1].recebido,false);assert.ok(done.conferido_em);assert.ok(done.retirado_em);
-  if(optional){await api(1,'/opcoes','PUT',{ativo:false});assert.equal((await api(2)).status,403);await api(1,'/opcoes','PUT',{ativo:true});assert.equal((await api(2)).body[0].estado,'conferida');}
+  assert.equal(done.contexto.empresa.box,'802');assert.equal(done.contexto.gps.gps_status,'desativado');
+  const own=await api(5,'','POST',request);assert.equal(own.status,201);assert.equal((await api(5)).body.length,1);
+  raw.prepare('UPDATE configuracao_entrega SET regras_json=?').run(JSON.stringify({gpsMode:'required',qrRequired:true,manualNumberAllowed:false}));
+  assert.equal((await api(3,`/${own.body.id}/retirar`,'PUT',{localizacao_entrega:{latitude:-23,longitude:-46,precisao_metros:10,capturado_em:new Date().toISOString()}})).status,200);
+  assert.equal((await api(5)).body[0].contexto.gps.localizacao,undefined);
+  assert.equal((await api(1)).body.find(item=>item.id===own.body.id).contexto.gps.localizacao.latitude,-23);
+  assert.equal((await api(3,'','POST',{...request,entregador_id:4})).status,201);
+  if(optional){await api(1,'/opcoes','PUT',{ativo:false});assert.equal((await api(2)).status,403);await api(1,'/opcoes','PUT',{ativo:true});assert.equal((await api(2)).body.find(item=>item.id===id).estado,'conferida');}
 });

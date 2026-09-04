@@ -14,6 +14,9 @@ Atualizado em 04/09/2026.
 
 ## Entregue
 
+- Navegação revisada: Nova solicitação oferece protocolo/retirada para todos os perfis; Acompanhar retiradas fica na lateral, com pop-up de empresa/box, andamento/conferidas e detalhes expansíveis. Solicitantes acompanham as próprias retiradas; Legalização/admin continuam conferindo. Coleta usa regras de GPS com coordenadas restritas ao admin. Migração aditiva de contexto dos registros, sem inventar GPS antigo.
+- Entregues removidos de Solicitações; exclusão recuperável por admin e seleção de etiquetas em Protocolos entregues. Testes cobrem criação pelo entregador, migração de banco existente, GPS e separação das listas. Protovia continua apenas local até concluir a infraestrutura.
+
 - Módulo Retiradas preparado nos dois projetos: solicitação pela Legalização/admin, coleta pelo entregador atribuído e conferência final pela Legalização no escritório. Datas e competências por documento, faltantes justificados e adicionais, agrupamento por empresa, sem emissão de protocolo. No Protovia inicia desligado e é ativado pelo administrador em Configurações de entrega. Hiperion permanece ativo. Guia em `docs/retiradas.md`.
 - Testes atualizados: 9 aprovados no Protovia e 5 focados no Hiperion. Permissões, fluxo, concorrência e ausência de geração de protocolos cobertos em bancos isolados. Publicação do Protovia continua pendente da infraestrutura descrita acima.
 
