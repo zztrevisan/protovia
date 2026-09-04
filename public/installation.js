@@ -23,8 +23,8 @@
   const form = document.getElementById('installationForm');
   function apply(data) {
     settings = data;
-    document.querySelectorAll('img[src="/brand.svg"],img[data-organization-logo]').forEach(img => {
-      img.dataset.organizationLogo = 'true'; img.src = data.logo || '/brand.svg'; img.alt = data.nome;
+    document.querySelectorAll('img[src="/brand.png"],img[data-organization-logo]').forEach(img => {
+      img.dataset.organizationLogo = 'true'; img.src = data.logo || '/brand.png'; img.alt = data.nome;
     });
     document.querySelectorAll('[data-organization-name]').forEach(el => { el.textContent = data.nome; });
     window.protoviaOrganization = data;

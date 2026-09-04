@@ -4,7 +4,7 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v82-request-hub';
+  'protovia-protocolos-v83-brand';
 
 
 const APP_SHELL = [
@@ -15,7 +15,7 @@ const APP_SHELL = [
   '/delivery-settings.js',
   '/pickups.js',
   '/installation.js',
-  '/brand.svg',
+  '/brand.png',
   '/vendor/qr-scanner.umd.min.js',
   '/vendor/qr-scanner-worker.min.js'
 ];
