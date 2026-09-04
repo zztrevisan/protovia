@@ -17,9 +17,9 @@
   </form>`;
   document.body.append(overlay);
   const style = document.createElement('style');
-  style.textContent = '#installationDialog{width:min(540px,94vw);max-height:90vh;overflow:auto;border:1px solid #d7e3ec;border-radius:16px;padding:26px;color:#153754}#installationDialog::backdrop{background:#071936b8}#installationDialog label{display:block;margin:14px 0;font-size:13px}#installationDialog input{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid #b7cbdc;border-radius:6px}#installationError{color:#a61b1b}.installationActions{display:flex;gap:12px;justify-content:flex-end}';
+  style.textContent = '#installationDialog{width:min(540px,94vw);max-height:90vh;overflow:auto;border:1px solid #d7ece9;border-radius:16px;padding:26px;color:#15544a}#installationDialog::backdrop{background:#071936b8}#installationDialog label{display:block;margin:14px 0;font-size:13px}#installationDialog input{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid #b7dcd6;border-radius:6px}#installationError{color:#a61b1b}.installationActions{display:flex;gap:12px;justify-content:flex-end}';
   document.head.append(style);
-  style.textContent += '#installationDialog button{padding:10px 16px;border:1px solid #cbd8e5;border-radius:8px;background:#f1f5f9;color:#153754;cursor:pointer;font-weight:600}#installationDialog button[type=submit]{background:#153754;color:white}#installationDialog button:disabled{opacity:.6;cursor:wait}.organization-settings-button{margin:14px;padding:10px;border:1px solid #54718c;border-radius:8px;background:transparent;color:#fff;font-size:12px}';
+  style.textContent += '#installationDialog button{padding:10px 16px;border:1px solid #cbe5e1;border-radius:8px;background:#f1f9f8;color:#15544a;cursor:pointer;font-weight:600}#installationDialog button[type=submit]{background:#15544a;color:white}#installationDialog button:disabled{opacity:.6;cursor:wait}.organization-settings-button{margin:14px;padding:10px;border:1px solid #548c83;border-radius:8px;background:transparent;color:#fff;font-size:12px}';
   const form = document.getElementById('installationForm');
   function apply(data) {
     settings = data;

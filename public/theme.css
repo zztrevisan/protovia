@@ -1,0 +1,11 @@
+/* Identidade do Protovia: petróleo, turquesa e superfícies claras. */
+:root {
+  --muted: #526e68;
+  --text-soft: #526e68;
+}
+@media screen {
+  .login-brand p, .login-foot, .top p, .stat .lbl, .empty, .hint {
+    color: #526e68 !important;
+  }
+  .top h1 em, .kicker { color: #0e7666 !important; }
+}

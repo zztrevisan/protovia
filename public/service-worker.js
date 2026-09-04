@@ -4,13 +4,14 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v78-delivery-settings';
+  'protovia-protocolos-v79-teal-theme';
 
 
 const APP_SHELL = [
   '/',
   '/index.html',
   '/offline.js',
+  '/theme.css',
   '/delivery-settings.js',
   '/installation.js',
   '/brand.svg',
@@ -284,4 +285,3 @@ self.addEventListener(
 
   }
 );
-
