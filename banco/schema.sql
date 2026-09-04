@@ -77,6 +77,17 @@ CREATE TABLE IF NOT EXISTS protocolos (
     entregue_em TEXT
   , motivo_cancelamento TEXT, cancelado_por TEXT, cancelado_em TEXT, excluido INTEGER NOT NULL DEFAULT 0, excluido_em TEXT, excluido_por TEXT, endereco_empresa TEXT, cliente_id INTEGER, cliente_box TEXT, qr_token TEXT, qr_obrigatorio INTEGER NOT NULL DEFAULT 0, qr_confirmado_em TEXT, qr_confirmado_por TEXT, confirmacao_entrega_metodo TEXT, confirmacao_numero_digitado TEXT, email_destinatarios TEXT, email_status TEXT, email_enviado_em TEXT, email_erro TEXT, notificacao_entregador_destinatario TEXT, notificacao_entregador_status TEXT, notificacao_entregador_enviada_em TEXT, notificacao_entregador_erro TEXT, entrega_evidencia_json TEXT);
 
+CREATE TABLE IF NOT EXISTS retirada_opcoes (id INTEGER PRIMARY KEY CHECK(id=1), ativo INTEGER NOT NULL);
+
+CREATE TABLE IF NOT EXISTS retiradas (
+    id TEXT PRIMARY KEY, empresa_id INTEGER NOT NULL, empresa_nome TEXT NOT NULL,
+    solicitante_id INTEGER NOT NULL, solicitante_nome TEXT NOT NULL,
+    entregador_id INTEGER NOT NULL, entregador_nome TEXT NOT NULL,
+    solicitado_em TEXT NOT NULL, retirado_em TEXT, conferido_em TEXT,
+    conferente_id INTEGER, conferente_nome TEXT, estado TEXT NOT NULL,
+    documentos_json TEXT NOT NULL, conferencia_json TEXT, observacao TEXT NOT NULL
+  );
+
 CREATE TABLE IF NOT EXISTS sessoes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     token TEXT NOT NULL UNIQUE,

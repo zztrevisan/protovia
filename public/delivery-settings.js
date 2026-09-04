@@ -16,7 +16,11 @@
   const form=dialog.querySelector('form');
   const error=dialog.querySelector('.error');
   const button=document.createElement('button');button.type='button';button.className='delivery-settings-button';button.textContent='Configurações de entrega';button.hidden=true;
-  document.querySelector('.side')?.append(button);
+  button.classList.add('menu-btn');
+  button.dataset.access='admin';
+  const sidebar=document.querySelector('.side');
+  sidebar?.insertBefore(button,sidebar.querySelector('.sidebar-account'));
+  style.textContent+=' .side{overflow-y:auto!important}.delivery-settings-button{flex:0 0 auto;margin:4px 0}.delivery-settings-button[hidden]{display:none!important}';
   async function fetchPolicy(){
     const response=await fetch('/api/configuracao-entrega',{cache:'no-store'});
     const value=await response.json();if(!response.ok)throw Error(value.erro||'Não foi possível consultar as regras.');

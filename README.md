@@ -88,3 +88,7 @@ Using, copying, modifying, redistributing, sublicensing, reselling, or incorpora
 **Copyright © 2026 Guilherme Andrade dos Santos Trevisan. All rights reserved.**
 
 </details>
+
+## Módulo opcional de retiradas
+
+O administrador pode ativar **Retiradas** em **Configurações de entrega**. A Legalização solicita a coleta e confere no escritório os documentos recebidos, com data e competência por documento e histórico por empresa, sem emitir protocolo. Consulte [o fluxo e as permissões](docs/retiradas.md).

@@ -4,7 +4,7 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v79-teal-theme';
+  'protovia-protocolos-v80-pickups';
 
 
 const APP_SHELL = [
@@ -13,6 +13,7 @@ const APP_SHELL = [
   '/offline.js',
   '/theme.css',
   '/delivery-settings.js',
+  '/pickups.js',
   '/installation.js',
   '/brand.svg',
   '/vendor/qr-scanner.umd.min.js',

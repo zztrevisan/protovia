@@ -14,6 +14,9 @@ Atualizado em 04/09/2026.
 
 ## Entregue
 
+- Módulo Retiradas preparado nos dois projetos: solicitação pela Legalização/admin, coleta pelo entregador atribuído e conferência final pela Legalização no escritório. Datas e competências por documento, faltantes justificados e adicionais, agrupamento por empresa, sem emissão de protocolo. No Protovia inicia desligado e é ativado pelo administrador em Configurações de entrega. Hiperion permanece ativo. Guia em `docs/retiradas.md`.
+- Testes atualizados: 9 aprovados no Protovia e 5 focados no Hiperion. Permissões, fluxo, concorrência e ausência de geração de protocolos cobertos em bancos isolados. Publicação do Protovia continua pendente da infraestrutura descrita acima.
+
 - Protovia recebeu paleta própria verde-petróleo/turquesa no login, painel, menus, marca padrão e e-mails. Cores semânticas de alerta/erro preservadas. Hiperion não recebeu essa mudança visual. Tema validado em prévia local; publicação continua pendente da infraestrutura.
 
 - Menu administrativo de regras de entrega implementado no Protovia e também no Hiperion, com configurações independentes. GPS: desligado/obrigatório/ausência justificada. QR: exigência e alternativa pelo número configuráveis. GPS inicia desligado.

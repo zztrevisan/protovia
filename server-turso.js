@@ -1518,6 +1518,7 @@ app.use('/api', limitarMutacoesApi);
 const deliveryPolicy = require('./lib/delivery-policy');
 const deliveryDatabase = garantirDb;
 deliveryPolicy.mountDeliveryPolicy(app, { database:deliveryDatabase, exigirAdmin });
+require('./lib/pickups').mountPickups(app, {database:deliveryDatabase,optional:true});
 
 // Dados operacionais nunca devem ser reaproveitados pelo cache do navegador
 // ou por uma camada intermediária da hospedagem.
