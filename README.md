@@ -32,6 +32,8 @@ O banco SQLite será criado vazio em `banco/protovia.db`. Não compartilhe esse 
 
 ## Vercel e Turso
 
+A integração Marketplace desta instalação usa `PROTOVIA_TURSO_DATABASE_URL` e `PROTOVIA_TURSO_AUTH_TOKEN`. Quando esse prefixo estiver presente, o servidor exige os dois valores e não recorre às credenciais sem prefixo.
+
 Crie **outro** projeto Vercel e **outro** banco Turso vazio. Configure `TURSO_DATABASE_URL` e `TURSO_AUTH_TOKEN` para o driver `@tursodatabase/serverless`, além das variáveis acima. A URL deve ser compatível com esse driver. O servidor cria o esquema inicial automaticamente; o modo cloud pode ser iniciado com `npm run start:cloud`.
 
 O arquivo `vercel.json` descreve o deploy, mas este repositório não inclui vínculo com projeto ou banco de produção. O deploy e o envio real de e-mail precisam ser homologados nessa infraestrutura nova antes do uso por clientes.

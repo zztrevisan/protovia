@@ -63,15 +63,7 @@ async function iniciarBanco() {
 
   }
 
-  const url =
-    process.env
-      .TURSO_DATABASE_URL
-      ?.trim();
-
-  const authToken =
-    process.env
-      .TURSO_AUTH_TOKEN
-      ?.trim();
+  const { url, authToken } = require('./lib/database-config').databaseConfig();
 
 
   if (

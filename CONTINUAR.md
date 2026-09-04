@@ -1,6 +1,16 @@
 # Ponto de retomada — Protovia
 
-Atualizado em 03/09/2026.
+Atualizado em 04/09/2026.
+
+## Infraestrutura nova — atualização
+
+- Projeto Vercel `protovia` criado na equipe `zztrevisans-projects`, sem deploy iniciado pelo assistente.
+- Banco Turso `protovia-db` criado pelo Marketplace no plano Starter apresentado como gratuito, região US East (Virginia).
+- Integração conectada somente a Production, com confirmação do usuário.
+- Variáveis criadas: `PROTOVIA_TURSO_DATABASE_URL` e `PROTOVIA_TURSO_AUTH_TOKEN`. Valores não foram revelados nem copiados.
+- O prefixo evita sobrescrever variáveis `TURSO_*` já detectadas na importação. O código prioriza o par dedicado e recusa configuração parcial.
+- Ainda é preciso validar protocolo/driver da URL fornecida, configurar SETUP_TOKEN e CRON_SECRET próprios e homologar o primeiro deploy. Resend ainda não foi configurado.
+- Ajuste de conexão preparado localmente; conferir Git antes de publicar, pois push pode iniciar deploy automático.
 
 ## Entregue
 
