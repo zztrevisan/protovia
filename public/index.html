@@ -28,6 +28,7 @@ body{margin:0;background:var(--bg);color:#18302c;font-family:Inter,Arial,sans-se
 .side{width:245px;background:var(--navy);color:white;padding:22px 16px;position:fixed;inset:0 auto 0 0;z-index:20}
 .brand{background:#fff;border-radius:12px;padding:12px;margin-bottom:24px;text-align:center}
 .brand img{width:185px;max-width:100%;display:block;margin:auto}
+body.product-brand-visible .side>.brand{border:2px solid var(--brand-primary,var(--navy));box-shadow:0 0 0 3px rgba(255,255,255,.16)}
 .brand .tenant-name{display:block;padding:14px 8px;color:var(--navy);font-family:"Palatino Linotype","Book Antiqua",Georgia,serif;font-size:23px;line-height:1.1}
 .protovia-signature{margin:7px 8px 11px;text-align:center;color:rgba(255,255,255,.48);font-size:9px;letter-spacing:.035em}.protovia-signature strong{color:rgba(255,255,255,.74);font-weight:800}
 body.customer-branded .side>.brand img[data-customer-logo]{display:block;max-height:112px;object-fit:contain}

@@ -4,7 +4,7 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v91-reset-colors';
+  'protovia-protocolos-v92-product-logo-border';
 
 
 const APP_SHELL = [

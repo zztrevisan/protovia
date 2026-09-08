@@ -51,6 +51,7 @@
     const accentInk=luminance(secondary)>.42?mix(secondary,'#000000',.46):secondary;
     const accentFill=luminance(secondary)>.82?mix(primary,'#000000',.24):secondary;
     const onAccent=luminance(accentFill)>.48?'#17211f':'#ffffff';
+    root.setProperty('--brand-primary',primary);
     root.setProperty('--navy',mix(primary,'#000000',.28));
     root.setProperty('--navy-2',mix(primary,'#000000',.08));
     root.setProperty('--blue',secondary);
@@ -85,6 +86,7 @@
     document.body.classList.toggle('customer-branded',customerConfigured);
     document.body.classList.toggle('brand-compact',data.logoTamanho==='compacto');
     document.body.classList.toggle('brand-context',contextMode);
+    document.body.classList.toggle('product-brand-visible',!customerConfigured||contextMode);
     document.querySelectorAll('[data-customer-logo]').forEach(img => {
       img.hidden = !data.logo || !customerConfigured;
       if (data.logo) { img.src = data.logo; img.alt = `Logo de ${data.nome}`; }
