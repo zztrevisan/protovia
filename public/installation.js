@@ -40,6 +40,13 @@
     primary=/^#[0-9a-f]{6}$/i.test(primary||'')?primary:DEFAULT_PRIMARY;
     secondary=/^#[0-9a-f]{6}$/i.test(secondary||'')?secondary:DEFAULT_SECONDARY;
     const root=document.documentElement.style;
+    const luminance=hex=>{
+      const channels=[1,3,5].map(index=>parseInt(hex.slice(index,index+2),16)/255).map(value=>value<=.04045?value/12.92:((value+.055)/1.055)**2.4);
+      return .2126*channels[0]+.7152*channels[1]+.0722*channels[2];
+    };
+    const onPrimary=luminance(primary)>.48?'#17211f':'#ffffff';
+    const onSecondary=luminance(secondary)>.48?'#17211f':'#ffffff';
+    const accentInk=luminance(secondary)>.42?mix(secondary,'#000000',.46):secondary;
     root.setProperty('--navy',mix(primary,'#000000',.28));
     root.setProperty('--navy-2',mix(primary,'#000000',.08));
     root.setProperty('--blue',secondary);
@@ -53,6 +60,11 @@
     root.setProperty('--text-soft',mix(primary,'#ffffff',.38));
     root.setProperty('--border',mix(primary,'#ffffff',.86));
     root.setProperty('--border-strong',mix(primary,'#ffffff',.76));
+    root.setProperty('--on-primary',onPrimary);
+    root.setProperty('--on-secondary',onSecondary);
+    root.setProperty('--accent-ink',accentInk);
+    root.setProperty('--primary-soft',mix(primary,'#ffffff',.9));
+    root.setProperty('--secondary-soft',mix(secondary,'#ffffff',.88));
   }
   function updatePreview(){
     overlay.style.setProperty('--preview-primary',form.elements.corPrimaria.value);

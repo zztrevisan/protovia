@@ -4470,7 +4470,8 @@ function protoviaNotificationTitle(type,message){
     return 'Não foi possível concluir';
   }
 
-  return 'Protovia Protocolos';
+  const nome=window.protoviaOrganization?.nome;
+  return `${nome&&nome!=='Sua organização'?nome:'ProtoVia'} Protocolos`;
 }
 
 function notifyProtovia(message,type=null,options={}){
@@ -4992,7 +4993,13 @@ async function createUser(){
       })
     });
 
-    const dados=await resposta.json();
+    const tipoResposta=resposta.headers.get('content-type')||'';
+    const dados=tipoResposta.includes('application/json') ? await resposta.json() : null;
+    if(!dados){
+      throw new Error(resposta.ok
+        ? 'O servidor respondeu em um formato inesperado. Recarregue a página e tente novamente.'
+        : 'Não foi possível gerar o protocolo agora. O servidor não concluiu a solicitação.');
+    }
 
     if(!resposta.ok){
       throw new Error(dados.erro||'Erro ao criar usuário.');
