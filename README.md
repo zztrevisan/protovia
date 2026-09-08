@@ -61,7 +61,7 @@ Variáveis principais:
 | `EMAIL_FROM` | Remetente autorizado |
 | `CRON_SECRET` | Proteção da rotina de vencimentos |
 
-Nunca salve valores reais no Git. Consulte [.env.example](.env.example).
+Consulte [.env.example](.env.example).
 
 ## Comandos
 
