@@ -2,10 +2,12 @@
   let settings;
   const overlay = document.createElement('dialog');
   overlay.id = 'installationDialog';
-  overlay.innerHTML = `<form id="installationForm"><h2 id="installationTitle">Configurar Protovia</h2>
-    <p>Cadastre a identidade do cliente. A marca ProtoVia continuará visível como responsável pelo produto.</p>
-    <label>Nome do cliente ou organização<input name="organizacao" required maxlength="120" placeholder="Ex.: Empresa Cliente"></label>
-    <label>Logo do cliente (opcional, PNG/JPEG/WebP, até 500 KB)<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label>
+  overlay.innerHTML = `<form id="installationForm"><h2 id="installationTitle">Identidade do cliente</h2>
+    <p id="installationDescription">Cadastre a identidade do cliente. A marca ProtoVia continuará visível como responsável pelo produto.</p>
+    <div id="organizationIdentity">
+      <label>Nome do cliente ou organização<input name="organizacao" required maxlength="120" placeholder="Ex.: Empresa Cliente"></label>
+      <label>Logo do cliente (opcional, PNG/JPEG/WebP, até 500 KB)<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label>
+    </div>
     <div id="installationCredentials">
       <label>Seu nome<input name="nome" maxlength="120" autocomplete="name"></label>
       <label>Login do administrador<input name="usuario" autocomplete="username" pattern="[a-z0-9_.-]{3,60}"></label>
@@ -34,9 +36,15 @@
   }
   function open() {
     form.elements.organizacao.value = settings.nome;
+    document.getElementById('organizationIdentity').hidden = !settings.configured;
     document.getElementById('installationCredentials').hidden = settings.configured;
+    document.getElementById('installationTitle').textContent = settings.configured ? 'Identidade do cliente' : 'Criar primeiro administrador';
+    document.getElementById('installationDescription').textContent = settings.configured
+      ? 'Configure a marca do cliente exibida junto da identidade permanente da ProtoVia.'
+      : 'Crie o acesso administrativo inicial. A identidade do cliente será configurada depois do login, no menu Configurações.';
     document.getElementById('installationClose').hidden = !settings.configured;
     for (const name of ['nome','usuario','senha','token']) form.elements[name].required = !settings.configured;
+    form.elements.organizacao.required = settings.configured;
     overlay.showModal();
   }
   overlay.addEventListener('cancel', event => { if (!settings?.configured) event.preventDefault(); });
@@ -45,13 +53,15 @@
     event.preventDefault();
     const button = form.querySelector('[type="submit"]'); button.disabled = true;
     try {
-      let logo = settings.logo;
+      let logo = settings.configured ? settings.logo : '';
       const file = form.elements.image.files[0];
       if (file) {
         if (file.size > 500000) throw Error('A imagem deve ter até 500 KB.');
         logo = await new Promise((resolve,reject) => { const reader = new FileReader(); reader.onload=()=>resolve(reader.result); reader.onerror=reject; reader.readAsDataURL(file); });
       }
-      const body = Object.fromEntries(new FormData(form)); delete body.image; body.logo=logo;
+      const body = Object.fromEntries(new FormData(form)); delete body.image;
+      if (!settings.configured) body.organizacao='Sua organização';
+      body.logo=logo;
       const response = await fetch(settings.configured ? '/api/organization' : '/api/installation', {
         method: settings.configured ? 'PUT' : 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
       });
@@ -60,9 +70,7 @@
     } catch (error) { document.getElementById('installationError').textContent=error.message; }
     finally { button.disabled=false; }
   };
-  const button = document.createElement('button'); button.className='organization-settings-button'; button.type='button'; button.textContent='Identidade do cliente'; button.hidden=true; button.onclick=open;
-  document.querySelector('.side')?.append(button);
-  setInterval(() => { button.hidden = typeof isAdmin !== 'function' || !isAdmin(); }, 1000);
+  window.protoviaIdentitySettings={open:()=>{if(settings?.configured && typeof isAdmin==='function' && isAdmin())open();}};
   fetch('/api/installation', {cache:'no-store'}).then(async response => {
     if (!response.ok) throw Error('Configuração indisponível. Verifique o servidor e tente recarregar.');
     const data = await response.json(); apply(data); if (!data.configured) open();

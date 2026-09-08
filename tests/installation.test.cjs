@@ -38,6 +38,8 @@ test('instalação protegida, login, identidade e emissão com banco vazio', {ti
       await page.goto(origin);
       await page.locator('#installationDialog[open]').waitFor();
       assert.equal(await page.locator('#installationForm input[name="organizacao"]').inputValue(),'Sua organização');
+      assert.equal(await page.locator('#installationTitle').innerText(),'Criar primeiro administrador');
+      assert.equal(await page.locator('#organizationIdentity').isVisible(),false);
       assert.deepEqual(errors,[]);
       if (process.env.PROTOVIA_SCREENSHOT) await page.screenshot({path:process.env.PROTOVIA_SCREENSHOT});
     } finally { await browser.close(); }

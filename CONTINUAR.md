@@ -14,7 +14,7 @@ Atualizado em 04/09/2026.
 
 ## Entregue
 
-- Identidade padrão atualizada com a logo horizontal ProtoVia (escudo tecnológico, wordmark e subtítulo `PROTOCOLS & TRACEABILITY`) em PNG transparente. Continua sendo apenas o fallback: uma logo cadastrada pelo administrador permanece prioritária. Arquivo: `public/brand.png`; cache `v83-brand`.
+- Identidade padrão atualizada com a logo horizontal ProtoVia (escudo tecnológico, wordmark e subtítulo `PROTOCOLS & TRACEABILITY`) em PNG com fundo branco sólido. A ProtoVia permanece como marca do produto; a identidade do cliente é complementar e configurada pelo admin. Arquivo: `public/brand.png`; cache `v85-brand-settings`.
 
 - Navegação revisada: Nova solicitação oferece protocolo/retirada para todos os perfis; Acompanhar retiradas fica na lateral, com pop-up de empresa/box, andamento/conferidas e detalhes expansíveis. Solicitantes acompanham as próprias retiradas; Legalização/admin continuam conferindo. Coleta usa regras de GPS com coordenadas restritas ao admin. Migração aditiva de contexto dos registros, sem inventar GPS antigo.
 - Entregues removidos de Solicitações; exclusão recuperável por admin e seleção de etiquetas em Protocolos entregues. Testes cobrem criação pelo entregador, migração de banco existente, GPS e separação das listas. Protovia continua apenas local até concluir a infraestrutura.

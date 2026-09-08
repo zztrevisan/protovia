@@ -4,7 +4,7 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v84-pickups-recent';
+  'protovia-protocolos-v85-brand-settings';
 
 
 const APP_SHELL = [

@@ -1,7 +1,9 @@
 (() => {
   const dialog=document.createElement('dialog');
   dialog.id='deliverySettingsDialog';
-  dialog.innerHTML=`<form><h2>Configurações de entrega</h2><p>Regras desta instalação. Somente administradores podem alterá-las.</p>
+  dialog.innerHTML=`<form><h2>Configurações</h2><p>Identidade e regras desta instalação. Somente administradores podem alterá-las.</p>
+    <section class="identity-settings"><div><strong>Identidade do cliente</strong><p class="help">Nome e logo exibidos junto da marca permanente da ProtoVia.</p></div><button type="button" class="open-identity">Configurar identidade</button></section>
+    <h3>Regras de entrega</h3>
     <label>Localização ao concluir<select name="gpsMode"><option value="off">Desativada — não coletar localização</option><option value="required">Obrigatória — bloquear sem localização</option><option value="justification">Solicitar — permitir ausência com justificativa</option></select></label>
     <p class="help">Coleta pontual após a conferência, nunca rastreamento contínuo. A precisão depende do aparelho; localização não comprova presença de forma absoluta.</p>
     <label class="check"><input type="checkbox" name="qrRequired"> Exigir conferência por QR Code</label>
@@ -11,11 +13,11 @@
     <p class="error" role="alert"></p><footer><button type="button" class="close">Cancelar</button><button type="submit">Salvar regras</button></footer></form>`;
   document.body.append(dialog);
   const style=document.createElement('style');
-  style.textContent='#deliverySettingsDialog{width:min(560px,94vw);max-height:90vh;overflow:auto;border:1px solid #cbe1dd;border-radius:16px;padding:24px;color:#17453d}#deliverySettingsDialog::backdrop{background:#071936bb}#deliverySettingsDialog label{display:block;margin:18px 0 10px;font-weight:600}#deliverySettingsDialog select{display:block;width:100%;padding:12px;margin-top:8px;border:1px solid #badcd6;border-radius:8px;background:white;color:#17453d}#deliverySettingsDialog .check{display:flex;gap:10px;align-items:center}#deliverySettingsDialog .check input{width:18px;height:18px}#deliverySettingsDialog .help{font-size:13px;line-height:1.6;color:#527e77}#deliverySettingsDialog .error{color:#ad2437}#deliverySettingsDialog footer{display:flex;justify-content:flex-end;gap:10px}#deliverySettingsDialog button,.delivery-settings-button{padding:10px 14px;border:1px solid #b6dcd6;border-radius:8px;cursor:pointer}#deliverySettingsDialog button[type=submit]{background:#126053;color:white}.delivery-settings-button{margin:10px;background:#126053;color:#fff}.delivery-location-button{margin:10px 0;padding:9px 14px;border-radius:8px;border:1px solid #b6dcd6;background:#f0faf8;color:#126053}';
+  style.textContent='#deliverySettingsDialog{width:min(620px,94vw);max-height:90vh;overflow:auto;border:1px solid #cbe1dd;border-radius:16px;padding:24px;color:#17453d}#deliverySettingsDialog::backdrop{background:#071936bb}#deliverySettingsDialog label{display:block;margin:18px 0 10px;font-weight:600}#deliverySettingsDialog select{display:block;width:100%;padding:12px;margin-top:8px;border:1px solid #badcd6;border-radius:8px;background:white;color:#17453d}#deliverySettingsDialog .check{display:flex;gap:10px;align-items:center}#deliverySettingsDialog .check input{width:18px;height:18px}#deliverySettingsDialog .help{font-size:13px;line-height:1.6;color:#527e77;margin:4px 0}#deliverySettingsDialog .identity-settings{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:20px 0;padding:16px;border:1px solid #cbe1dd;border-radius:12px;background:#f2faf8}#deliverySettingsDialog .identity-settings strong{font-size:15px}#deliverySettingsDialog .open-identity{flex:0 0 auto;background:#fff;color:#126053}#deliverySettingsDialog h3{margin:24px 0 4px;padding-top:18px;border-top:1px solid #dcebe8}#deliverySettingsDialog .error{color:#ad2437}#deliverySettingsDialog footer{display:flex;justify-content:flex-end;gap:10px}#deliverySettingsDialog button,.delivery-settings-button{padding:10px 14px;border:1px solid #b6dcd6;border-radius:8px;cursor:pointer}#deliverySettingsDialog button[type=submit]{background:#126053;color:white}.delivery-settings-button{margin:10px;background:#126053;color:#fff}.delivery-location-button{margin:10px 0;padding:9px 14px;border-radius:8px;border:1px solid #b6dcd6;background:#f0faf8;color:#126053}@media(max-width:520px){#deliverySettingsDialog .identity-settings{display:block}#deliverySettingsDialog .open-identity{width:100%;margin-top:12px}}';
   document.head.append(style);
   const form=dialog.querySelector('form');
   const error=dialog.querySelector('.error');
-  const button=document.createElement('button');button.type='button';button.className='delivery-settings-button';button.textContent='Configurações de entrega';button.hidden=true;
+  const button=document.createElement('button');button.type='button';button.className='delivery-settings-button';button.textContent='Configurações';button.hidden=true;
   button.classList.add('menu-btn');
   button.dataset.access='admin';
   const sidebar=document.querySelector('.side');
@@ -31,6 +33,7 @@
     try{const policy=await fetchPolicy();form.elements.gpsMode.value=policy.gpsMode;form.elements.qrRequired.checked=policy.qrRequired;form.elements.manualNumberAllowed.checked=policy.manualNumberAllowed;dialog.showModal();}
     catch(e){alert(e.message);}
   };
+  dialog.querySelector('.open-identity').onclick=()=>{dialog.close();window.protoviaIdentitySettings?.open();};
   dialog.querySelector('.close').onclick=()=>dialog.close();
   form.onsubmit=async event=>{
     event.preventDefault();const submit=form.querySelector('[type=submit]');submit.disabled=true;

@@ -26,13 +26,13 @@ Copie `.env.example` para `.env`. Gere um token de instalação:
 node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
 ```
 
-Coloque o resultado em `SETUP_TOKEN` e execute `npm start`. Abra `http://127.0.0.1:3000` e informe nome da organização, logo opcional, primeiro administrador e token. Não há senha padrão. Depois de concluir, remova `SETUP_TOKEN` do ambiente e reinicie o servidor.
+Coloque o resultado em `SETUP_TOKEN` e execute `npm start`. Abra `http://127.0.0.1:3000` e crie o primeiro administrador usando esse token. Não há senha padrão. Depois, faça login como admin e use **Configurações → Identidade do cliente** para cadastrar nome e logo. Após concluir o primeiro acesso, remova `SETUP_TOKEN` do ambiente e reinicie o servidor.
 
 O banco SQLite será criado vazio em `banco/protovia.db`. Não compartilhe esse arquivo nem o `.env`. Para acesso por outros computadores, configure `HOST` conscientemente e use HTTPS por um proxy reverso; a câmera exige contexto seguro no navegador.
 
 ## Identidade e operação
 
-- Administradores podem alterar nome e logo em **Identidade da organização**.
+- Administradores podem alterar nome e logo em **Configurações → Identidade do cliente**.
 - Cadastre empresas e usuários antes de emitir protocolos.
 - A identidade configurada aparece nas impressões e nos avisos de novas entregas/vencimentos.
 - Etiquetas, envelopes, assinatura, QR Code e confirmação manual de emergência fazem parte do fluxo existente.
