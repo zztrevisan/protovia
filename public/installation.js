@@ -7,11 +7,12 @@
     <div id="organizationIdentity">
       <label>Nome do cliente ou organização<input name="organizacao" required maxlength="120" placeholder="Ex.: Empresa Cliente"></label>
       <label>Logo do cliente (opcional, PNG/JPEG/WebP, até 500 KB)<input name="image" type="file" accept="image/png,image/jpeg,image/webp"></label>
+      <label class="remove-logo"><input name="removerLogo" type="checkbox"> Remover a logo atualmente cadastrada</label>
       <div class="identity-colors">
         <label>Cor principal<input name="corPrimaria" type="color" value="#0f6657"></label>
         <label>Cor secundária<input name="corSecundaria" type="color" value="#19b89f"></label>
       </div>
-      <label>Exibição da marca<select name="logoTamanho"><option value="grande">Grande — marca do cliente em destaque</option><option value="compacto">Compacta — marca menor e nome ao lado</option></select></label>
+      <label>Exibição da marca<select name="logoTamanho"><option value="grande">Cliente em destaque — logo grande</option><option value="compacto">Cliente compacto — logo menor e nome ao lado</option><option value="contexto">ProtoVia + cliente — identificação pequena do ambiente</option></select></label>
       <div class="identity-preview" aria-label="Prévia das cores"><span></span><div><strong>Prévia do ambiente</strong><small>Marca principal e cor complementar</small></div></div>
     </div>
     <div id="installationCredentials">
@@ -25,7 +26,7 @@
   </form>`;
   document.body.append(overlay);
   const style = document.createElement('style');
-  style.textContent = '#installationDialog{width:min(560px,94vw);max-height:90vh;overflow:auto;border:1px solid #d7ece9;border-radius:16px;padding:26px;color:#15544a}#installationDialog::backdrop{background:#071936b8}#installationDialog label{display:block;margin:14px 0;font-size:13px}#installationDialog input,#installationDialog select{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid #b7dcd6;border-radius:6px;background:#fff;color:#173d37}#installationDialog input[type=color]{height:46px;padding:4px;cursor:pointer}.identity-colors{display:grid;grid-template-columns:1fr 1fr;gap:12px}.identity-preview{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px;border:1px solid #d7ece9;border-radius:12px;background:#f6fbfa}.identity-preview span{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--preview-primary),var(--preview-secondary));box-shadow:0 7px 18px color-mix(in srgb,var(--preview-primary),transparent 75%)}.identity-preview strong,.identity-preview small{display:block}.identity-preview small{margin-top:3px;color:#64847e}#installationError{color:#a61b1b}.installationActions{display:flex;gap:12px;justify-content:flex-end}@media(max-width:480px){.identity-colors{grid-template-columns:1fr}}';
+  style.textContent = '#installationDialog{width:min(560px,94vw);max-height:90vh;overflow:auto;border:1px solid #d7ece9;border-radius:16px;padding:26px;color:#15544a}#installationDialog::backdrop{background:#071936b8}#installationDialog label{display:block;margin:14px 0;font-size:13px}#installationDialog input,#installationDialog select{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid #b7dcd6;border-radius:6px;background:#fff;color:#173d37}#installationDialog .remove-logo{display:flex;align-items:center;gap:8px;font-weight:600}#installationDialog .remove-logo input{display:inline-block;width:17px;height:17px;margin:0;padding:0}#installationDialog input[type=color]{height:46px;padding:4px;cursor:pointer}.identity-colors{display:grid;grid-template-columns:1fr 1fr;gap:12px}.identity-preview{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px;border:1px solid #d7ece9;border-radius:12px;background:#f6fbfa}.identity-preview span{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--preview-primary),var(--preview-secondary));box-shadow:0 7px 18px color-mix(in srgb,var(--preview-primary),transparent 75%)}.identity-preview strong,.identity-preview small{display:block}.identity-preview small{margin-top:3px;color:#64847e}#installationError{color:#a61b1b}.installationActions{display:flex;gap:12px;justify-content:flex-end}@media(max-width:480px){.identity-colors{grid-template-columns:1fr}}';
   document.head.append(style);
   style.textContent += '#installationDialog button{padding:10px 16px;border:1px solid #cbe5e1;border-radius:8px;background:#f1f9f8;color:#15544a;cursor:pointer;font-weight:600}#installationDialog button[type=submit]{background:#15544a;color:white}#installationDialog button:disabled{opacity:.6;cursor:wait}.organization-settings-button{margin:14px;padding:10px;border:1px solid #548c83;border-radius:8px;background:transparent;color:#fff;font-size:12px}';
   const form = document.getElementById('installationForm');
@@ -78,19 +79,24 @@
     settings = data;
     const customerName=(data.nome && data.nome!=='Sua organização')?data.nome:'ProtoVia';
     const customerConfigured=customerName!=='ProtoVia';
+    const contextMode=data.logoTamanho==='contexto';
     applyColors(data.corPrimaria,data.corSecundaria);
     document.body.classList.toggle('customer-branded',customerConfigured);
     document.body.classList.toggle('brand-compact',data.logoTamanho==='compacto');
+    document.body.classList.toggle('brand-context',contextMode);
     document.querySelectorAll('[data-customer-logo]').forEach(img => {
       img.hidden = !data.logo || !customerConfigured;
       if (data.logo) { img.src = data.logo; img.alt = `Logo de ${data.nome}`; }
     });
+    document.querySelectorAll('[data-customer-primary-logo]').forEach(img => { img.hidden=!data.logo||!customerConfigured||contextMode; });
     document.querySelectorAll('[data-customer-name]').forEach(el => { el.textContent = customerName; });
-    document.querySelectorAll('[data-customer-name-fallback]').forEach(el => { el.hidden=Boolean(data.logo)&&customerConfigured; el.textContent=customerName; });
-    document.querySelectorAll('[data-product-fallback]').forEach(el => { el.hidden=customerConfigured; });
-    document.querySelectorAll('[data-customer-context]').forEach(el => { el.hidden = !data.configured || !customerConfigured; });
-    document.querySelectorAll('[data-customer-monogram]').forEach(el => { el.textContent=customerName.trim().charAt(0).toUpperCase()||'P'; });
-    document.title=`${customerName} Protocolos`;
+    document.querySelectorAll('[data-app-name]').forEach(el => { el.textContent=contextMode?'ProtoVia':customerName; });
+    document.querySelectorAll('[data-customer-name-fallback]').forEach(el => { el.hidden=contextMode||(Boolean(data.logo)&&customerConfigured); el.textContent=customerName; });
+    document.querySelectorAll('[data-product-fallback]').forEach(el => { el.hidden=customerConfigured&&!contextMode; });
+    document.querySelectorAll('[data-customer-context]').forEach(el => { el.hidden = !data.configured || !customerConfigured || !contextMode; });
+    const appName=contextMode?'ProtoVia':customerName;
+    document.querySelectorAll('[data-customer-monogram]').forEach(el => { el.textContent=appName.trim().charAt(0).toUpperCase()||'P'; });
+    document.title=`${appName} Protocolos`;
     window.protoviaOrganization = data;
     window.protoviaCustomer = data;
   }
@@ -99,6 +105,7 @@
     form.elements.corPrimaria.value=settings.corPrimaria||DEFAULT_PRIMARY;
     form.elements.corSecundaria.value=settings.corSecundaria||DEFAULT_SECONDARY;
     form.elements.logoTamanho.value=settings.logoTamanho||'grande';
+    form.elements.removerLogo.checked=false;
     updatePreview();
     document.getElementById('organizationIdentity').hidden = !settings.configured;
     document.getElementById('installationCredentials').hidden = settings.configured;
@@ -118,12 +125,13 @@
     const button = form.querySelector('[type="submit"]'); button.disabled = true;
     try {
       let logo = settings.configured ? settings.logo : '';
+      if (form.elements.removerLogo.checked) logo='';
       const file = form.elements.image.files[0];
       if (file) {
         if (file.size > 500000) throw Error('A imagem deve ter até 500 KB.');
         logo = await new Promise((resolve,reject) => { const reader = new FileReader(); reader.onload=()=>resolve(reader.result); reader.onerror=reject; reader.readAsDataURL(file); });
       }
-      const body = Object.fromEntries(new FormData(form)); delete body.image;
+      const body = Object.fromEntries(new FormData(form)); delete body.image; delete body.removerLogo;
       if (!settings.configured) body.organizacao='Sua organização';
       body.logo=logo;
       body.corPrimaria=form.elements.corPrimaria.value||settings.corPrimaria||DEFAULT_PRIMARY;

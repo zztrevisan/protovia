@@ -62,6 +62,8 @@ test('instalação protegida, login, identidade e emissão com banco vazio', {ti
   assert.equal(identity.corPrimaria,'#123456');
   assert.equal(identity.corSecundaria,'#abcdef');
   assert.equal(identity.logoTamanho,'compacto');
+  assert.equal((await request('/api/organization','PUT',{organizacao:'Nova Marca',logo:'',corPrimaria:'#123456',corSecundaria:'#abcdef',logoTamanho:'contexto'})).status,200);
+  assert.equal((await request('/api/installation')).data.logoTamanho,'contexto');
   const client=await request('/api/clientes','POST',{nome:'Cliente de teste'}); assert.equal(client.status,201);
   const protocol=await request('/api/protocolos','POST',{cliente:'Cliente de teste',cliente_id:client.data.id,departamento:'Administrativo',entregador:setup.nome,itens:[{descricao:'Documento teste',vencimento:null}]});
   assert.equal(protocol.status,201,JSON.stringify(protocol.data));

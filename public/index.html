@@ -3529,7 +3529,7 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
       <div class="login-brand-panel">
         <div class="login-logo-wrap">
         <img src="/brand.png" alt="ProtoVia" data-product-fallback>
-        <img data-customer-logo hidden alt="">
+        <img data-customer-logo data-customer-primary-logo hidden alt="">
         <strong class="tenant-name" data-customer-name-fallback hidden>Sua organização</strong>
         </div>
         <div class="protovia-signature">Desenvolvido pela <strong>ProtoVia</strong></div>
@@ -3555,7 +3555,7 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
     <div class="login-card">
       <div class="login-brand">
         <h1>Bem-vindo</h1>
-        <p>Entre com suas credenciais para acessar <span data-customer-name>ProtoVia</span> Protocolos.</p>
+        <p>Entre com suas credenciais para acessar <span data-app-name>ProtoVia</span> Protocolos.</p>
       </div>
 
       <form id="loginForm" onsubmit="fazerLogin(event)">
@@ -3610,7 +3610,8 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
 
 <div class="app auth-hidden" id="appRoot">
 <aside class="side">
-  <div class="brand"><img src="/brand.png" alt="ProtoVia" data-product-fallback><img data-customer-logo hidden alt=""><strong class="tenant-name" data-customer-name-fallback hidden>Sua organização</strong></div>
+  <div class="brand"><img src="/brand.png" alt="ProtoVia" data-product-fallback><img data-customer-logo data-customer-primary-logo hidden alt=""><strong class="tenant-name" data-customer-name-fallback hidden>Sua organização</strong></div>
+  <div class="customer-context" data-customer-context hidden><img data-customer-logo hidden alt=""><div><small>Ambiente de</small><strong data-customer-name>Sua organização</strong></div></div>
   <div class="protovia-signature">Desenvolvido pela <strong>ProtoVia</strong></div>
   <div class="menu-section-title">Operação</div>
   <button class="menu-btn active" data-view="dashboard" data-access="all" onclick="show('dashboard',this)">Visão geral</button>
@@ -3647,7 +3648,7 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
     <button class="primary mobile-menu" onclick="toggleMenu()">Menu</button>
     <span class="brand-monogram" data-customer-monogram aria-hidden="true">P</span>
     <div class="brand-text">
-      <h1><span data-customer-name>ProtoVia</span> <em>Protocolos</em></h1>
+      <h1><span data-app-name>ProtoVia</span> <em>Protocolos</em></h1>
       <p>Solicitações, entregas e assinaturas em um só lugar.</p>
     </div>
   </div>

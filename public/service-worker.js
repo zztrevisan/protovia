@@ -4,7 +4,7 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v88-full-tenant-theme';
+  'protovia-protocolos-v90-brand-modes';
 
 
 const APP_SHELL = [
