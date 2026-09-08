@@ -36,6 +36,7 @@
   body.customer-branded .login-brand-panel>.protovia-signature { align-self:center;margin-top:-7px; }
   body.brand-context .protovia-signature { display:none; }
   body.brand-context .customer-context { display:flex!important; }
+  body:not(.brand-context) [data-customer-context] { display:none!important; }
   body.brand-context .side>.brand img[data-product-fallback] { width:168px!important;max-height:none!important; }
 
   /* Componentes de interface derivados da identidade escolhida */
