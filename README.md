@@ -1,94 +1,102 @@
-# Protovia
+<p align="center">
+  <img src="public/brand.png" width="520" alt="ProtoVia">
+</p>
 
-## Configurações de entrega
+# ProtoVia
 
-O menu **Configurações de entrega** é exclusivo de administradores. Permite desligar o GPS, exigi-lo ou permitir ausência com justificativa de 10 a 1.000 caracteres. Também permite ligar/desligar a conferência por QR e a alternativa pelo número. Nome e assinatura continuam obrigatórios.
+Plataforma de protocolos e rastreabilidade documental preparada para instalações independentes e personalizadas por cliente.
 
-O padrão mantém GPS desligado, QR ligado e número permitido em emergência. As regras são aplicadas no servidor, inclusive na sincronização. É necessário consultar as regras online antes de confirmar; se a conexão cair depois, a fila preserva a evidência e o servidor revalida no envio.
+Cada implantação possui banco, usuários, identidade visual, domínio e credenciais próprios. A marca ProtoVia permanece como autoria do produto, enquanto nome, logo e cores do cliente são configurados pelo administrador.
 
-GPS é coletado pontualmente, com permissão do navegador, em HTTPS ou localhost. A precisão depende do aparelho e não comprova presença de forma absoluta. O administrador consulta coordenadas, precisão e horário em **Protocolos entregues → abrir protocolo → Ver registro de localização**. Não são enviados no comprovante, no e-mail ou na listagem geral. Abrir o link Google Maps compartilha as coordenadas com esse provedor.
+## Recursos
 
-Gestão de protocolos, documentos e entregas, com confirmação por assinatura e QR Code.
+- emissão de protocolos com vários documentos;
+- QR Code, assinatura e confirmação manual de contingência;
+- etiquetas A4, envelopes e comprovantes;
+- empresas, usuários, perfis e histórico operacional;
+- alertas de vencimento e notificações por e-mail;
+- GPS opcional, obrigatório ou justificado;
+- módulo opcional de retirada e conferência documental;
+- identidade visual com cores e três modos de apresentação da marca;
+- operação hospedada com Vercel/Turso ou local com SQLite.
 
-Esta versão inicia sem empresas, usuários ou protocolos. Cada instalação pertence a uma organização e usa banco, credenciais e domínio próprios. Não é um serviço multiempresa com isolamento de locatários no mesmo banco.
+## Modelo de implantação
 
-## Executar localmente
+```mermaid
+flowchart LR
+    C[Instalação do cliente] --> APP[ProtoVia]
+    APP --> DB[(Banco exclusivo)]
+    APP --> MAIL[Remetente exclusivo]
+    APP --> BRAND[Nome, logo e cores]
+```
+
+O projeto não é multiempresa no mesmo banco. Para cada cliente, crie uma instalação separada.
+
+## Primeira instalação
 
 Requisitos: Node.js 24 ou superior e npm.
 
-```sh
+```powershell
 npm ci
-```
-
-Copie `.env.example` para `.env`. Gere um token de instalação:
-
-```sh
+Copy-Item .env.example .env
 node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
 ```
 
-Coloque o resultado em `SETUP_TOKEN` e execute `npm start`. Abra `http://127.0.0.1:3000` e crie o primeiro administrador usando esse token. Não há senha padrão. Depois, faça login como admin e use **Configurações → Identidade do cliente** para cadastrar nome e logo. Após concluir o primeiro acesso, remova `SETUP_TOKEN` do ambiente e reinicie o servidor.
+Coloque o segredo gerado em `SETUP_TOKEN`, execute `npm start` e abra `http://127.0.0.1:3000`. O token autoriza somente a criação inicial da organização e do primeiro administrador. Após concluir o cadastro, remova-o do ambiente e reinicie o serviço.
 
-O banco SQLite será criado vazio em `banco/protovia.db`. Não compartilhe esse arquivo nem o `.env`. Para acesso por outros computadores, configure `HOST` conscientemente e use HTTPS por um proxy reverso; a câmera exige contexto seguro no navegador.
+Não existe usuário ou senha padrão.
 
-## Identidade e operação
+## Configuração
 
-- Administradores podem alterar nome e logo em **Configurações → Identidade do cliente**.
-- Cadastre empresas e usuários antes de emitir protocolos.
-- A identidade configurada aparece nas impressões e nos avisos de novas entregas/vencimentos.
-- Etiquetas, envelopes, assinatura, QR Code e confirmação manual de emergência fazem parte do fluxo existente.
-- E-mails exigem `RESEND_API_KEY` e `EMAIL_FROM` próprios. Configure `APP_URL` com a URL desta instalação. Sem essas variáveis, o sistema registra a ausência de configuração; não usa um serviço de outra instalação.
+Variáveis principais:
 
-## Vercel e Turso
+| Variável | Uso |
+| --- | --- |
+| `SETUP_TOKEN` | Instalação inicial; remover depois do uso |
+| `SQLITE_DATABASE_PATH` | Banco da execução local |
+| `TURSO_DATABASE_URL` | Banco da execução hospedada |
+| `TURSO_AUTH_TOKEN` | Credencial do banco hospedado |
+| `APP_URL` | Endereço público usado nos e-mails |
+| `RESEND_API_KEY` | Credencial do serviço de e-mail |
+| `EMAIL_FROM` | Remetente autorizado |
+| `CRON_SECRET` | Proteção da rotina de vencimentos |
 
-A integração Marketplace desta instalação usa `PROTOVIA_TURSO_DATABASE_URL` e `PROTOVIA_TURSO_AUTH_TOKEN`. Quando esse prefixo estiver presente, o servidor exige os dois valores e não recorre às credenciais sem prefixo.
+Nunca salve valores reais no Git. Consulte [.env.example](.env.example).
 
-Crie **outro** projeto Vercel e **outro** banco Turso vazio. Configure `TURSO_DATABASE_URL` e `TURSO_AUTH_TOKEN` para o driver `@tursodatabase/serverless`, além das variáveis acima. A URL deve ser compatível com esse driver. O servidor cria o esquema inicial automaticamente; o modo cloud pode ser iniciado com `npm run start:cloud`.
+## Comandos
 
-O arquivo `vercel.json` descreve o deploy, mas este repositório não inclui vínculo com projeto ou banco de produção. O deploy e o envio real de e-mail precisam ser homologados nessa infraestrutura nova antes do uso por clientes.
-
-Para os lembretes de vencimento, configure `CRON_SECRET`. A rota `/cron/alertas-vencimentos` exige `Authorization: Bearer <CRON_SECRET>`; sem segredo, recusa chamadas. O agendamento incluído é diário às 11h UTC. Em servidor próprio, configure um agendador externo para chamar a mesma rota. As notificações consideram documentos pendentes entre um e três dias antes do vencimento.
-
-## Verificação
-
-```sh
+```powershell
+npm start          # servidor local com SQLite
+npm run start:cloud
 npm test
 ```
 
-Os testes usam banco temporário e não enviam mensagens reais. Cobrem esquema vazio, sintaxe do HTML, proteção da instalação, administrador único, login, identidade e emissão. Não substituem uma homologação completa em dispositivo móvel, impressora e infraestrutura cloud.
+Os testes usam bancos temporários e não enviam e-mails reais.
 
-`node scripts/export-schema.cjs` regenera o esquema SQL usando um banco em memória, sem consultar dados operacionais.
+## Estrutura
 
-## Cuidados antes de comercializar
+```text
+public/             interface, identidade visual e PWA
+lib/                instalação, dados, e-mail e regras operacionais
+banco/schema.sql    esquema inicial sem dados de clientes
+tests/              testes automatizados
+docs/               arquitetura e operação
+server.js           execução local com SQLite
+server-turso.js     execução hospedada com Turso
+vercel.json         publicação e cron
+```
 
-Mantenha uma instalação e um banco por cliente, estabeleça backup/restauração, monitore falhas de envio e revise permissões, privacidade e retenção de assinaturas. Não cadastre credenciais de produção em arquivos versionados. Dependências de terceiros mantêm suas próprias licenças; nenhuma licença pública de redistribuição deste produto foi definida aqui.
+## Documentação
 
+- [Arquitetura de software](docs/ARQUITETURA.md)
+- [Fluxos do produto](docs/FLUXOS.md)
+- [Design system e identidade](docs/DESIGN-SYSTEM.md)
+- [Segurança e isolamento](docs/SEGURANCA.md)
+- [Implantação](docs/IMPLANTACAO.md)
+- [Retiradas de documentação](docs/retiradas.md)
 
-## Licença e uso
+## Licença
 
-Este projeto é um software proprietário desenvolvido por **Guilherme Andrade dos Santos Trevisan**.
-
-A disponibilização deste repositório não significa que o software seja open source. O código-fonte é disponibilizado exclusivamente para fins de portfólio, demonstração, avaliação técnica e apresentação comercial.
-
-É proibido utilizar, copiar, modificar, redistribuir, sublicenciar, revender ou incorporar este código em outros projetos sem autorização expressa do autor. O software pode ser licenciado comercialmente para empresas mediante contrato ou autorização específica. A aquisição de uma licença de uso não transfers a propriedade do código-fonte ou da propriedade intelectual do sistema.
+Software proprietário de **Guilherme Andrade dos Santos Trevisan**. O acesso ao repositório não concede licença de uso, cópia, alteração, redistribuição ou exploração comercial. Consulte [LICENSE](LICENSE).
 
 **Copyright © 2026 Guilherme Andrade dos Santos Trevisan. Todos os direitos reservados.**
-
-<details>
-<summary><b>Click here for English Version 🇺🇸</b></summary>
-
-<br>
-
-### English
-This project is proprietary software developed by **Guilherme Andrade dos Santos Trevisan**.
-
-Making this repository available does not mean that the software is open source. The source code is provided exclusively for portfolio, demonstration, technical evaluation, and commercial presentation purposes.
-
-Using, copying, modifying, redistributing, sublicensing, reselling, or incorporating this code into other projects without express authorization from the author is strictly prohibited. The software may be commercially licensed to companies under a specific contract or agreement. Acquiring a usage license does not transfer ownership of the source code or intellectual property.
-
-**Copyright © 2026 Guilherme Andrade dos Santos Trevisan. All rights reserved.**
-
-</details>
-
-## Módulo opcional de retiradas
-
-O administrador pode ativar **Retiradas** em **Configurações de entrega**. Em **Nova solicitação**, todos os perfis escolhem protocolo ou retirada. O acompanhamento tem listas internas de andamento/conferidas, busca por empresa/box e GPS conforme configuração. A conferência no escritório continua exclusiva da Legalização e administradores. Consulte [o fluxo e as permissões](docs/retiradas.md).

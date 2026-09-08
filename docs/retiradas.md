@@ -21,7 +21,7 @@ As permissões são verificadas no servidor, não apenas no menu. As transiçõe
 
 ## Operação
 
-O módulo precisa de conexão com o servidor. Não usa a fila offline dos protocolos, nem dispara e-mails de entrega. Cadastros inativos não podem ser selecionados para novas retiradas. Os nomes são preservados na solicitação mesmo se o cadastro for alterado posteriormente.
+O módulo precisa de conexão com o servidor e não usa a fila offline dos protocolos. Quando configurado, envia uma mensagem própria ao responsável pela nova retirada e outra ao solicitante da Legalização depois da coleta. Esses avisos são visualmente diferentes dos e-mails de protocolo. Cadastros inativos não podem ser selecionados para novas retiradas. Os nomes são preservados na solicitação mesmo se o cadastro for alterado posteriormente.
 
 O pop-up de empresa pesquisa nome/box e mostra endereço. Novas retiradas preservam esses dados do cadastro. Registros antigos não recebem localização ou dados retroativos inventados.
 

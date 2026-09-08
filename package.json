@@ -1,15 +1,16 @@
 {
   "name": "protovia",
   "version": "0.1.0",
-  "description": "Gestão de protocolos, entregas e comprovantes.",
+  "description": "Plataforma personalizável de protocolos e rastreabilidade documental.",
   "main": "server-turso.js",
   "scripts": {
     "start": "node server.js",
     "start:cloud": "node server-turso.js",
     "test": "node --test tests/*.test.cjs"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["protocolos", "documentos", "rastreabilidade", "pwa"],
+  "author": "Guilherme Andrade dos Santos Trevisan",
+  "license": "UNLICENSED",
   "type": "commonjs",
   "dependencies": {
     "@libsql/client": "^0.17.4",
