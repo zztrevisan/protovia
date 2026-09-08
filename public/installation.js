@@ -93,6 +93,7 @@
       if (data.logo) { img.src = data.logo; img.alt = `Logo de ${data.nome}`; }
     });
     document.querySelectorAll('[data-customer-primary-logo]').forEach(img => { img.hidden=!data.logo||!customerConfigured||contextMode; });
+    document.querySelectorAll('[data-product-shield-fallback]').forEach(el => { el.hidden=Boolean(data.logo)&&customerConfigured; });
     document.querySelectorAll('[data-customer-name]').forEach(el => { el.textContent = customerName; });
     document.querySelectorAll('[data-app-name]').forEach(el => { el.textContent=contextMode?'ProtoVia':customerName; });
     document.querySelectorAll('[data-customer-name-fallback]').forEach(el => { el.hidden=contextMode||(Boolean(data.logo)&&customerConfigured); el.textContent=customerName; });

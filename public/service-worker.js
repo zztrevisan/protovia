@@ -4,7 +4,7 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v95-brand-display-modes';
+  'protovia-protocolos-v96-print-shield-fallback';
 
 
 const APP_SHELL = [
