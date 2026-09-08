@@ -1211,13 +1211,16 @@ app.delete('/api/clientes/:id', exigirGerenciaDeClientes, (req, res) => {
 // USUÁRIOS
 // ============================================================
 
-app.get('/api/usuarios/entregadores', (req, res) => {
+app.get('/api/usuarios/entregadores', exigirLogin, (req, res) => {
   try {
+    const filtroPerfil = req.usuarioLogado.perfil === 'admin'
+      ? "perfil IN ('admin', 'entregador')"
+      : "perfil = 'entregador'";
     const usuarios = db.prepare(`
       SELECT id, nome, departamento, perfil, ativo
       FROM usuarios
       WHERE ativo = 1
-        AND perfil IN ('admin', 'entregador')
+        AND ${filtroPerfil}
       ORDER BY nome
     `).all();
 
@@ -2448,6 +2451,22 @@ app.post(
 
     }
 
+    const usuarioResponsavel = db.prepare(`
+      SELECT id, perfil
+      FROM usuarios
+      WHERE ativo = 1
+        AND perfil IN ('admin', 'entregador')
+        AND LOWER(nome) = LOWER(?)
+      ORDER BY id
+      LIMIT 1
+    `).get(String(entregador).trim());
+    if (!usuarioResponsavel) {
+      return res.status(400).json({ erro: 'Selecione um responsável pela entrega ativo.' });
+    }
+    if (usuarioResponsavel.perfil === 'admin' && req.usuarioLogado.perfil !== 'admin') {
+      return res.status(403).json({ erro: 'Somente administradores podem atribuir uma entrega a outro administrador.' });
+    }
+
     for (
       const item
       of itens
@@ -2745,7 +2764,7 @@ app.post(
         SELECT nome, email
         FROM usuarios
         WHERE ativo = 1
-          AND perfil = 'entregador'
+          AND perfil IN ('admin', 'entregador')
           AND LOWER(nome) = LOWER(?)
         ORDER BY id
         LIMIT 1

@@ -38,11 +38,17 @@ for(const optional of [false,true])test(`Retiradas: permissões, etapas, isolame
   assert.equal((await api(2,'/opcoes','PUT',{ativo:true})).status,403);
   if(optional){assert.equal((await api(2)).status,403);assert.equal((await api(1,'/opcoes','PUT',{ativo:true})).status,200);}
   assert.equal((await api(5)).status,200);
-  assert.equal((await api(2,'/cadastros')).body.empresas.length,1);
+  const emitterRegisters=(await api(2,'/cadastros')).body;
+  assert.equal(emitterRegisters.empresas.length,1);
+  assert.equal(emitterRegisters.empresas_recentes.length,0);
+  assert.deepEqual(emitterRegisters.entregadores.map(item=>item.id),[3,4]);
+  assert.ok((await api(1,'/cadastros')).body.entregadores.some(item=>item.id===1));
   const request={empresa_id:1,entregador_id:3,documentos:['Contrato','Alvará'],observacao:'Retirar originais'};
   assert.equal((await api(3,'/cadastros')).status,200);
   assert.equal((await api(2,'','POST',{...request,empresa_id:9})).status,400);
+  assert.equal((await api(2,'','POST',{...request,entregador_id:1})).status,403);
   const created=await api(2,'','POST',request);assert.equal(created.status,201,JSON.stringify(created.body));const id=created.body.id;
+  assert.equal((await api(2,'/cadastros')).body.empresas_recentes[0].id,1);
   assert.equal(raw.prepare('SELECT COUNT(*) n FROM protocolos').get().n,0);
   assert.equal((await api(4)).body.length,0);
   assert.equal((await api(3)).body.length,1);
@@ -68,5 +74,9 @@ for(const optional of [false,true])test(`Retiradas: permissões, etapas, isolame
   assert.equal((await api(5)).body[0].contexto.gps.localizacao,undefined);
   assert.equal((await api(1)).body.find(item=>item.id===own.body.id).contexto.gps.localizacao.latitude,-23);
   assert.equal((await api(3,'','POST',{...request,entregador_id:4})).status,201);
+  const removable=await api(3,'','POST',{...request,entregador_id:4});assert.equal(removable.status,201);
+  assert.equal((await api(3,`/${removable.body.id}`,'DELETE')).status,403);
+  assert.equal((await api(1,`/${removable.body.id}`,'DELETE')).status,200);
+  assert.equal((await api(1,`/${removable.body.id}`,'DELETE')).status,404);
   if(optional){await api(1,'/opcoes','PUT',{ativo:false});assert.equal((await api(2)).status,403);await api(1,'/opcoes','PUT',{ativo:true});assert.equal((await api(2)).body.find(item=>item.id===id).estado,'conferida');}
 });

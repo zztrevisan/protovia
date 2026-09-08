@@ -30,7 +30,7 @@ test('API protege configurações e GPS, aplica QR e mantém evidência imutáve
   const adminCookie=cookie;
   assert.deepEqual((await api('/api/configuracao-entrega')).body,{gpsMode:'off',qrRequired:true,manualNumberAllowed:true});
   const client=await api('/api/clientes','POST',{nome:'Cliente Teste GPS'});assert.equal(client.status,201);
-  const newProtocol=async()=>{const result=await api('/api/protocolos','POST',{cliente:'Cliente Teste GPS',cliente_id:client.body.id,departamento:'Fiscal',entregador:'Gestor Teste',itens:[{descricao:'Documento de teste'}]});assert.equal(result.status,201,JSON.stringify(result.body));return result.body;};
+  const newProtocol=async(entregador='Gestor Teste')=>{const result=await api('/api/protocolos','POST',{cliente:'Cliente Teste GPS',cliente_id:client.body.id,departamento:'Fiscal',entregador,itens:[{descricao:'Documento de teste'}]});assert.equal(result.status,201,JSON.stringify(result.body));return result.body;};
   const p=await newProtocol();
   const body={recebido_por:'Recebedor Teste',assinatura:'data:image/png;base64,dGVzdA==',protocolo_numero_confirmacao:String(p.numero)};
   const rule={gpsMode:'required',qrRequired:true,manualNumberAllowed:true};
@@ -53,11 +53,12 @@ test('API protege configurações e GPS, aplica QR e mantém evidência imutáve
   assert.equal((await api('/api/configuracao-entrega')).status,200);
   assert.equal((await api('/api/configuracao-entrega','PUT',rule)).status,403);
   assert.equal((await api(`/api/protocolos/${p.id}/localizacao`)).status,403);
+  assert.equal((await api('/api/protocolos','POST',{cliente:'Cliente Teste GPS',cliente_id:client.body.id,departamento:'Fiscal',entregador:'Gestor Teste',itens:[{descricao:'Documento de teste'}]})).status,403);
   cookie=adminCookie;
   const courier=await api('/api/usuarios','POST',{nome:'Entregador Criação Teste',departamento:'Entregas',perfil:'entregador',usuario:'courier-creation',senha:'Test-password-123!'});
   assert.equal(courier.status,201,JSON.stringify(courier.body));
   cookie=(await api('/api/login','POST',{usuario:'courier-creation',senha:'Test-password-123!'})).cookie.split(';')[0];
   assert.equal((await api('/api/protocolos/proximo-numero')).status,200);
-  await newProtocol();
+  await newProtocol('Entregador Criação Teste');
   assert.equal((await api(`/api/protocolos/${p.id}/excluir`,'PUT',{})).status,403);
 });
