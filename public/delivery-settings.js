@@ -2,7 +2,7 @@
   const dialog=document.createElement('dialog');
   dialog.id='deliverySettingsDialog';
   dialog.innerHTML=`<form><h2>Configurações</h2><p>Identidade e regras desta instalação. Somente administradores podem alterá-las.</p>
-    <section class="identity-settings"><div><strong>Identidade do cliente</strong><p class="help">Nome e logo exibidos junto da marca permanente da ProtoVia.</p></div><button type="button" class="open-identity">Configurar identidade</button></section>
+    <section class="identity-settings"><div><strong>Identidade do ambiente</strong><p class="help">Nome, logo, tamanho da marca e cores do cliente. A autoria da ProtoVia permanece como assinatura discreta.</p></div><button type="button" class="open-identity">Personalizar ambiente</button></section>
     <h3>Regras de entrega</h3>
     <label>Localização ao concluir<select name="gpsMode"><option value="off">Desativada — não coletar localização</option><option value="required">Obrigatória — bloquear sem localização</option><option value="justification">Solicitar — permitir ausência com justificativa</option></select></label>
     <p class="help">Coleta pontual após a conferência, nunca rastreamento contínuo. A precisão depende do aparelho; localização não comprova presença de forma absoluta.</p>
