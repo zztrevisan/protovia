@@ -82,6 +82,7 @@
     const customerName=(data.nome && data.nome!=='Sua organização')?data.nome:'ProtoVia';
     const customerConfigured=customerName!=='ProtoVia';
     const contextMode=data.logoTamanho==='contexto';
+    const compactMode=data.logoTamanho==='compacto';
     applyColors(data.corPrimaria,data.corSecundaria);
     document.body.classList.toggle('customer-branded',customerConfigured);
     document.body.classList.toggle('brand-compact',data.logoTamanho==='compacto');
@@ -96,7 +97,7 @@
     document.querySelectorAll('[data-app-name]').forEach(el => { el.textContent=contextMode?'ProtoVia':customerName; });
     document.querySelectorAll('[data-customer-name-fallback]').forEach(el => { el.hidden=contextMode||(Boolean(data.logo)&&customerConfigured); el.textContent=customerName; });
     document.querySelectorAll('[data-product-fallback]').forEach(el => { el.hidden=customerConfigured&&!contextMode; });
-    document.querySelectorAll('[data-customer-context]').forEach(el => { el.hidden = !data.configured || !customerConfigured || !contextMode; });
+    document.querySelectorAll('[data-customer-context]').forEach(el => { el.hidden = !data.configured || !customerConfigured || (!contextMode&&!compactMode); });
     const appName=contextMode?'ProtoVia':customerName;
     document.querySelectorAll('[data-customer-monogram]').forEach(el => { el.textContent=appName.trim().charAt(0).toUpperCase()||'P'; });
     document.title=`${appName} Protocolos`;

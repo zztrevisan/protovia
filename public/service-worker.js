@@ -4,7 +4,7 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v94-context-without-logo';
+  'protovia-protocolos-v95-brand-display-modes';
 
 
 const APP_SHELL = [

@@ -35,9 +35,10 @@
   body.brand-compact .login-logo-wrap img[data-customer-logo] { max-height:72px;object-fit:contain; }
   body.customer-branded .login-brand-panel>.protovia-signature { align-self:center;margin-top:-7px; }
   body.brand-context .protovia-signature { display:none; }
-  body.brand-context .customer-context { display:flex!important; }
-  body.brand-context .customer-context img { display:none!important; }
-  body:not(.brand-context) [data-customer-context] { display:none!important; }
+  body.brand-context .customer-context,body.brand-compact .customer-context { display:flex!important; }
+  body.brand-context .customer-context img:not([hidden]) { display:block!important; }
+  body.brand-compact .customer-context img { display:none!important; }
+  body:not(.brand-context):not(.brand-compact) [data-customer-context] { display:none!important; }
   body.brand-context .side>.brand img[data-product-fallback] { width:168px!important;max-height:none!important; }
 
   /* Componentes de interface derivados da identidade escolhida */
