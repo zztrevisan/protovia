@@ -4,7 +4,7 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v90-brand-modes';
+  'protovia-protocolos-v91-reset-colors';
 
 
 const APP_SHELL = [

@@ -12,6 +12,7 @@
         <label>Cor principal<input name="corPrimaria" type="color" value="#0f6657"></label>
         <label>Cor secundária<input name="corSecundaria" type="color" value="#19b89f"></label>
       </div>
+      <button class="restore-colors" type="button">Restaurar cores da ProtoVia</button>
       <label>Exibição da marca<select name="logoTamanho"><option value="grande">Cliente em destaque — logo grande</option><option value="compacto">Cliente compacto — logo menor e nome ao lado</option><option value="contexto">ProtoVia + cliente — identificação pequena do ambiente</option></select></label>
       <div class="identity-preview" aria-label="Prévia das cores"><span></span><div><strong>Prévia do ambiente</strong><small>Marca principal e cor complementar</small></div></div>
     </div>
@@ -28,7 +29,7 @@
   const style = document.createElement('style');
   style.textContent = '#installationDialog{width:min(560px,94vw);max-height:90vh;overflow:auto;border:1px solid #d7ece9;border-radius:16px;padding:26px;color:#15544a}#installationDialog::backdrop{background:#071936b8}#installationDialog label{display:block;margin:14px 0;font-size:13px}#installationDialog input,#installationDialog select{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid #b7dcd6;border-radius:6px;background:#fff;color:#173d37}#installationDialog .remove-logo{display:flex;align-items:center;gap:8px;font-weight:600}#installationDialog .remove-logo input{display:inline-block;width:17px;height:17px;margin:0;padding:0}#installationDialog input[type=color]{height:46px;padding:4px;cursor:pointer}.identity-colors{display:grid;grid-template-columns:1fr 1fr;gap:12px}.identity-preview{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px;border:1px solid #d7ece9;border-radius:12px;background:#f6fbfa}.identity-preview span{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--preview-primary),var(--preview-secondary));box-shadow:0 7px 18px color-mix(in srgb,var(--preview-primary),transparent 75%)}.identity-preview strong,.identity-preview small{display:block}.identity-preview small{margin-top:3px;color:#64847e}#installationError{color:#a61b1b}.installationActions{display:flex;gap:12px;justify-content:flex-end}@media(max-width:480px){.identity-colors{grid-template-columns:1fr}}';
   document.head.append(style);
-  style.textContent += '#installationDialog button{padding:10px 16px;border:1px solid #cbe5e1;border-radius:8px;background:#f1f9f8;color:#15544a;cursor:pointer;font-weight:600}#installationDialog button[type=submit]{background:#15544a;color:white}#installationDialog button:disabled{opacity:.6;cursor:wait}.organization-settings-button{margin:14px;padding:10px;border:1px solid #548c83;border-radius:8px;background:transparent;color:#fff;font-size:12px}';
+  style.textContent += '#installationDialog button{padding:10px 16px;border:1px solid #cbe5e1;border-radius:8px;background:#f1f9f8;color:#15544a;cursor:pointer;font-weight:600}#installationDialog button[type=submit]{background:#15544a;color:white}#installationDialog button:disabled{opacity:.6;cursor:wait}#installationDialog .restore-colors{width:100%;margin-top:-2px;background:#fff;color:#15544a}.organization-settings-button{margin:14px;padding:10px;border:1px solid #548c83;border-radius:8px;background:transparent;color:#fff;font-size:12px}';
   const form = document.getElementById('installationForm');
   const DEFAULT_PRIMARY='#0f6657';
   const DEFAULT_SECONDARY='#19b89f';
@@ -147,6 +148,11 @@
   };
   form.elements.corPrimaria.addEventListener('input',updatePreview);
   form.elements.corSecundaria.addEventListener('input',updatePreview);
+  overlay.querySelector('.restore-colors').addEventListener('click',()=>{
+    form.elements.corPrimaria.value=DEFAULT_PRIMARY;
+    form.elements.corSecundaria.value=DEFAULT_SECONDARY;
+    updatePreview();
+  });
   window.protoviaIdentitySettings={open:()=>{if(settings?.configured && typeof isAdmin==='function' && isAdmin())open();}};
   fetch('/api/installation', {cache:'no-store'}).then(async response => {
     if (!response.ok) throw Error('Configuração indisponível. Verifique o servidor e tente recarregar.');
