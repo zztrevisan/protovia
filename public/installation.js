@@ -47,6 +47,8 @@
     const onPrimary=luminance(primary)>.48?'#17211f':'#ffffff';
     const onSecondary=luminance(secondary)>.48?'#17211f':'#ffffff';
     const accentInk=luminance(secondary)>.42?mix(secondary,'#000000',.46):secondary;
+    const accentFill=luminance(secondary)>.82?mix(primary,'#000000',.24):secondary;
+    const onAccent=luminance(accentFill)>.48?'#17211f':'#ffffff';
     root.setProperty('--navy',mix(primary,'#000000',.28));
     root.setProperty('--navy-2',mix(primary,'#000000',.08));
     root.setProperty('--blue',secondary);
@@ -63,6 +65,8 @@
     root.setProperty('--on-primary',onPrimary);
     root.setProperty('--on-secondary',onSecondary);
     root.setProperty('--accent-ink',accentInk);
+    root.setProperty('--accent-fill',accentFill);
+    root.setProperty('--on-accent',onAccent);
     root.setProperty('--primary-soft',mix(primary,'#ffffff',.9));
     root.setProperty('--secondary-soft',mix(secondary,'#ffffff',.88));
   }
