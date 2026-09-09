@@ -30,7 +30,7 @@ Há diferentes formas de apresentação da marca, permitindo adequar o ambiente 
 
 Cada cliente opera em uma instalação independente, com banco de dados, domínio, usuários e credenciais exclusivos. Essa separação reduz o risco de mistura de informações e facilita manutenção, evolução e personalização.
 
-A implantação pode funcionar em nuvem, com Vercel e Turso, ou em ambiente local com SQLite, conforme a necessidade da operação.
+A ProtoVia é disponibilizada como um site online, com acesso seguro pelo navegador e uma instalação hospedada e isolada para cada cliente.
 
 ## Fluxo simples, evidência completa
 

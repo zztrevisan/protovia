@@ -11,7 +11,7 @@ Mantenha uma instalação por cliente. Defina antes da publicação:
 - rotina de backup;
 - responsável administrativo.
 
-## Vercel e Turso
+## Publicação do site — Vercel e Turso
 
 1. Crie um banco Turso vazio.
 2. Importe o repositório em um projeto Vercel exclusivo.
@@ -23,7 +23,7 @@ Mantenha uma instalação por cliente. Defina antes da publicação:
 
 O cron definido em `vercel.json` executa diariamente às 11h UTC.
 
-## Servidor local
+## Desenvolvimento local
 
 ```powershell
 npm ci --omit=dev
@@ -31,7 +31,7 @@ Copy-Item .env.example .env
 npm start
 ```
 
-Use proxy reverso com HTTPS. Mantenha o processo Node em endereço interno e o SQLite em disco local protegido, fora de pastas sincronizadas.
+Essa execução serve exclusivamente para desenvolvimento e testes. Ela não é oferecida como instalação interna ou modalidade comercial da ProtoVia. A operação do cliente deve usar o site publicado com HTTPS e banco hospedado próprio.
 
 ## Homologação
 
