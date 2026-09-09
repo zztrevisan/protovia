@@ -4,99 +4,61 @@
 
 # ProtoVia
 
-Plataforma de protocolos e rastreabilidade documental preparada para instalações independentes e personalizadas por cliente.
+### Protocolos e rastreabilidade para operações que não podem perder o controle.
 
-Cada implantação possui banco, usuários, identidade visual, domínio e credenciais próprios. A marca ProtoVia permanece como autoria do produto, enquanto nome, logo e cores do cliente são configurados pelo administrador.
+A **ProtoVia** centraliza solicitações, entregas, retiradas e vencimentos documentais em uma experiência simples, rastreável e personalizada para cada empresa.
 
-## Recursos
+Do pedido inicial à confirmação final, cada etapa preserva responsáveis, datas, documentos e evidências. O resultado é uma operação mais organizada, com menos retrabalho e mais segurança para equipes administrativas, entregadores e gestores.
 
-- emissão de protocolos com vários documentos;
-- QR Code, assinatura e confirmação manual de contingência;
-- etiquetas A4, envelopes e comprovantes;
-- empresas, usuários, perfis e histórico operacional;
-- alertas de vencimento e notificações por e-mail;
-- GPS opcional, obrigatório ou justificado;
-- módulo opcional de retirada e conferência documental;
-- identidade visual com cores e três modos de apresentação da marca;
-- operação hospedada com Vercel/Turso ou local com SQLite.
+## Uma operação inteira em um só lugar
 
-## Modelo de implantação
+- **Protocolos digitais:** vários documentos reunidos na mesma solicitação, com numeração, etiquetas e comprovantes.
+- **Entrega rastreável:** confirmação por QR Code ou contingência controlada, assinatura e registro de localização.
+- **Retiradas organizadas:** solicitação, coleta e conferência presencial em um fluxo separado e fácil de acompanhar.
+- **Prazos sob controle:** painel de vencimentos e alertas antecipados por e-mail.
+- **Comunicação automática:** avisos de novas atribuições, coletas e conclusões enviados às pessoas certas.
+- **Gestão de acesso:** perfis e permissões adequados às responsabilidades de cada usuário.
+- **Histórico operacional:** decisões e movimentações preservadas para consulta e auditoria.
+
+## Feita para carregar a marca do cliente
+
+Cada implantação pode receber nome, logotipo e cores próprios. A identidade da empresa ganha destaque sem apagar a assinatura tecnológica da ProtoVia.
+
+Há diferentes formas de apresentação da marca, permitindo adequar o ambiente ao pacote contratado e ao padrão visual de cada organização.
+
+## Segurança e independência por cliente
+
+Cada cliente opera em uma instalação independente, com banco de dados, domínio, usuários e credenciais exclusivos. Essa separação reduz o risco de mistura de informações e facilita manutenção, evolução e personalização.
+
+A implantação pode funcionar em nuvem, com Vercel e Turso, ou em ambiente local com SQLite, conforme a necessidade da operação.
+
+## Fluxo simples, evidência completa
 
 ```mermaid
 flowchart LR
-    C[Instalação do cliente] --> APP[ProtoVia]
-    APP --> DB[(Banco exclusivo)]
-    APP --> MAIL[Remetente exclusivo]
-    APP --> BRAND[Nome, logo e cores]
+    A[Solicitação] --> B[Atribuição]
+    B --> C[Coleta ou entrega]
+    C --> D[Confirmação]
+    D --> E[Histórico e evidências]
 ```
 
-O projeto não é multiempresa no mesmo banco. Para cada cliente, crie uma instalação separada.
+O administrador define quais recursos estarão ativos, incluindo retirada documental, confirmação por QR Code, regras de GPS e alternativas de contingência.
 
-## Primeira instalação
+## Materiais do produto
 
-Requisitos: Node.js 24 ou superior e npm.
-
-```powershell
-npm ci
-Copy-Item .env.example .env
-node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
-```
-
-Coloque o segredo gerado em `SETUP_TOKEN`, execute `npm start` e abra `http://127.0.0.1:3000`. O token autoriza somente a criação inicial da organização e do primeiro administrador. Após concluir o cadastro, remova-o do ambiente e reinicie o serviço.
-
-Não existe usuário ou senha padrão.
-
-## Configuração
-
-Variáveis principais:
-
-| Variável | Uso |
-| --- | --- |
-| `SETUP_TOKEN` | Instalação inicial; remover depois do uso |
-| `SQLITE_DATABASE_PATH` | Banco da execução local |
-| `TURSO_DATABASE_URL` | Banco da execução hospedada |
-| `TURSO_AUTH_TOKEN` | Credencial do banco hospedado |
-| `APP_URL` | Endereço público usado nos e-mails |
-| `RESEND_API_KEY` | Credencial do serviço de e-mail |
-| `EMAIL_FROM` | Remetente autorizado |
-| `CRON_SECRET` | Proteção da rotina de vencimentos |
-
-Consulte [.env.example](.env.example).
-
-## Comandos
-
-```powershell
-npm start          # servidor local com SQLite
-npm run start:cloud
-npm test
-```
-
-Os testes usam bancos temporários e não enviam e-mails reais.
-
-## Estrutura
-
-```text
-public/             interface, identidade visual e PWA
-lib/                instalação, dados, e-mail e regras operacionais
-banco/schema.sql    esquema inicial sem dados de clientes
-tests/              testes automatizados
-docs/               arquitetura e operação
-server.js           execução local com SQLite
-server-turso.js     execução hospedada com Turso
-vercel.json         publicação e cron
-```
-
-## Documentação
-
-- [Arquitetura de software](docs/ARQUITETURA.md)
-- [Fluxos do produto](docs/FLUXOS.md)
-- [Design system e identidade](docs/DESIGN-SYSTEM.md)
+- [Apresentação da arquitetura](output/pdf/protovia-arquitetura-software.pdf)
+- [Design system](output/pdf/protovia-design-system.pdf)
+- [Fluxos operacionais](output/pdf/protovia-fluxogramas.pdf)
+- [Arquitetura técnica](docs/ARQUITETURA.md)
 - [Segurança e isolamento](docs/SEGURANCA.md)
 - [Implantação](docs/IMPLANTACAO.md)
-- [Retiradas de documentação](docs/retiradas.md)
+
+## Licenciamento comercial
+
+A ProtoVia é um produto proprietário disponível para licenciamento empresarial. A implantação, personalização de marca, configuração de módulos e condições de uso são definidas comercialmente para cada cliente.
 
 ## Licença
 
-Software proprietário de **Guilherme Andrade dos Santos Trevisan**. O acesso ao repositório não concede licença de uso, cópia, alteração, redistribuição ou exploração comercial. Consulte [LICENSE](LICENSE).
+Software proprietário de **Guilherme Andrade dos Santos Trevisan**. A disponibilização deste repositório não torna o produto open source e não concede autorização automática de uso, cópia, alteração, redistribuição ou exploração comercial. Consulte [LICENSE](LICENSE).
 
 **Copyright © 2026 Guilherme Andrade dos Santos Trevisan. Todos os direitos reservados.**

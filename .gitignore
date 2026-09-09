@@ -10,4 +10,6 @@ node_modules/
 coverage/
 .tmp/
 backups/
-output/
+output/*
+!output/pdf/
+!output/pdf/*.pdf
