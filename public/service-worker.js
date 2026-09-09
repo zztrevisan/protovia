@@ -4,7 +4,7 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v97-login-identity';
+  'protovia-protocolos-v98-login-reflow';
 
 
 const APP_SHELL = [
@@ -14,7 +14,7 @@ const APP_SHELL = [
   '/theme.css',
   '/delivery-settings.js',
   '/pickups.js',
-  '/installation.js?v=20260909-login-identity-2',
+  '/installation.js?v=20260909-login-identity-3',
   '/brand.png',
   '/vendor/qr-scanner.umd.min.js',
   '/vendor/qr-scanner-worker.min.js'

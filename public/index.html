@@ -388,6 +388,8 @@ button:disabled{opacity:.58;cursor:not-allowed}
 .login-brand-meta{display:grid;justify-items:start;gap:8px;width:100%}
 .login-brand-panel .customer-context{margin:0;max-width:100%}
 body.hide-login-customer #loginScreen .customer-context{display:none!important}
+body.hide-login-customer .login-hero{justify-content:flex-start}
+body.hide-login-customer .login-hero-copy{margin-top:34px}
 .login-environment{
   display:inline-flex;
   align-items:center;
@@ -559,6 +561,7 @@ body.hide-login-customer #loginScreen .customer-context{display:none!important}
   .login-mini-list{display:none}
   .login-card{padding:27px 23px 30px}
   .login-brand h1{font-size:24px}
+  body.hide-login-customer .login-hero-copy{margin-top:26px}
 }
 
 @media(max-width:900px){
@@ -7826,7 +7829,7 @@ iniciarSistema();
 </script>
 
 
-<script src="/installation.js?v=20260909-login-identity-2"></script>
+<script src="/installation.js?v=20260909-login-identity-3"></script>
 <script src="/delivery-settings.js"></script>
 <script src="/pickups.js"></script>
 </body>
