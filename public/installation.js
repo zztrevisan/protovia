@@ -80,6 +80,7 @@
   }
   function apply(data) {
     settings = data;
+    const mostrarContextoLogin=!([false,0,'0','false'].includes(data.mostrarContextoLogin));
     const customerName=(data.nome && data.nome!=='Sua organização')?data.nome:'ProtoVia';
     const customerConfigured=customerName!=='ProtoVia';
     const contextMode=data.logoTamanho==='contexto';
@@ -89,6 +90,7 @@
     document.body.classList.toggle('brand-compact',data.logoTamanho==='compacto');
     document.body.classList.toggle('brand-context',contextMode);
     document.body.classList.toggle('product-brand-visible',!customerConfigured||contextMode);
+    document.body.classList.toggle('hide-login-customer',!mostrarContextoLogin);
     document.querySelectorAll('[data-customer-logo]').forEach(img => {
       img.hidden = !data.logo || !customerConfigured;
       if (data.logo) { img.src = data.logo; img.alt = `Logo de ${data.nome}`; }
@@ -101,7 +103,7 @@
     document.querySelectorAll('[data-product-fallback]').forEach(el => { el.hidden=customerConfigured&&!contextMode; });
     document.querySelectorAll('[data-customer-context]').forEach(el => {
       const hiddenByMode=!data.configured || !customerConfigured || (!contextMode&&!compactMode);
-      const hiddenOnLogin=Boolean(el.closest('#loginScreen')) && data.mostrarContextoLogin===false;
+      const hiddenOnLogin=Boolean(el.closest('#loginScreen')) && !mostrarContextoLogin;
       el.hidden=hiddenByMode||hiddenOnLogin;
     });
     const appName=contextMode?'ProtoVia':customerName;

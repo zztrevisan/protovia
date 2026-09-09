@@ -4,7 +4,7 @@
 // ============================================================
 
 const CACHE_NAME =
-  'protovia-protocolos-v96-print-shield-fallback';
+  'protovia-protocolos-v97-login-identity';
 
 
 const APP_SHELL = [
@@ -14,7 +14,7 @@ const APP_SHELL = [
   '/theme.css',
   '/delivery-settings.js',
   '/pickups.js',
-  '/installation.js',
+  '/installation.js?v=20260909-login-identity-2',
   '/brand.png',
   '/vendor/qr-scanner.umd.min.js',
   '/vendor/qr-scanner-worker.min.js'

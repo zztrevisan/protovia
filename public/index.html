@@ -385,8 +385,9 @@ button:disabled{opacity:.58;cursor:not-allowed}
   border-radius:18px;
 }
 .login-brand-panel .protovia-signature{width:min(var(--login-logo-width),100%);margin:-3px 0 2px;text-align:center}
-.login-brand-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;width:100%}
+.login-brand-meta{display:grid;justify-items:start;gap:8px;width:100%}
 .login-brand-panel .customer-context{margin:0;max-width:100%}
+body.hide-login-customer #loginScreen .customer-context{display:none!important}
 .login-environment{
   display:inline-flex;
   align-items:center;
@@ -7825,7 +7826,7 @@ iniciarSistema();
 </script>
 
 
-<script src="/installation.js"></script>
+<script src="/installation.js?v=20260909-login-identity-2"></script>
 <script src="/delivery-settings.js"></script>
 <script src="/pickups.js"></script>
 </body>
