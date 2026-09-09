@@ -56,12 +56,13 @@ test('instalação protegida, login, identidade e emissão com banco vazio', {ti
   const login=await request('/api/login','POST',{usuario:setup.usuario,senha:setup.senha});
   assert.equal(login.status,200,JSON.stringify(login.data)); cookie=login.cookie.split(';')[0];
   assert.equal((await request('/api/clientes')).data.clientes.length,0);
-  assert.equal((await request('/api/organization','PUT',{organizacao:'Nova Marca',logo:'',corPrimaria:'#123456',corSecundaria:'#abcdef',logoTamanho:'compacto'})).status,200);
+  assert.equal((await request('/api/organization','PUT',{organizacao:'Nova Marca',logo:'',corPrimaria:'#123456',corSecundaria:'#abcdef',logoTamanho:'compacto',mostrarContextoLogin:false})).status,200);
   const identity=(await request('/api/installation')).data;
   assert.equal(identity.nome,'Nova Marca');
   assert.equal(identity.corPrimaria,'#123456');
   assert.equal(identity.corSecundaria,'#abcdef');
   assert.equal(identity.logoTamanho,'compacto');
+  assert.equal(identity.mostrarContextoLogin,false);
   assert.equal((await request('/api/organization','PUT',{organizacao:'Nova Marca',logo:'',corPrimaria:'#123456',corSecundaria:'#abcdef',logoTamanho:'contexto'})).status,200);
   assert.equal((await request('/api/installation')).data.logoTamanho,'contexto');
   const client=await request('/api/clientes','POST',{nome:'Cliente de teste'}); assert.equal(client.status,201);

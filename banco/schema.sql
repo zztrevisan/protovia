@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS clientes (
 
 CREATE TABLE IF NOT EXISTS configuracao_entrega (id INTEGER PRIMARY KEY CHECK (id = 1), regras_json TEXT NOT NULL, alterado_por TEXT NOT NULL, alterado_em TEXT NOT NULL);
 
-CREATE TABLE IF NOT EXISTS organizacao (id INTEGER PRIMARY KEY CHECK (id = 1), nome TEXT NOT NULL, logo TEXT NOT NULL DEFAULT '', cor_primaria TEXT NOT NULL DEFAULT '#0f6657', cor_secundaria TEXT NOT NULL DEFAULT '#19b89f', logo_tamanho TEXT NOT NULL DEFAULT 'grande');
+CREATE TABLE IF NOT EXISTS organizacao (id INTEGER PRIMARY KEY CHECK (id = 1), nome TEXT NOT NULL, logo TEXT NOT NULL DEFAULT '', cor_primaria TEXT NOT NULL DEFAULT '#0f6657', cor_secundaria TEXT NOT NULL DEFAULT '#19b89f', logo_tamanho TEXT NOT NULL DEFAULT 'grande', mostrar_contexto_login INTEGER NOT NULL DEFAULT 1);
 
 CREATE TABLE IF NOT EXISTS protocolo_itens (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

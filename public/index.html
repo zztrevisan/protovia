@@ -372,14 +372,19 @@ button:disabled{opacity:.58;cursor:not-allowed}
   z-index:1;
   display:flex;
   flex-direction:column;
-  align-items:flex-start;
+  align-items:center;
+  width:270px;
+  max-width:82%;
   gap:14px;
 }
 .login-brand-panel .login-logo-wrap{
-  width:270px;
+  width:100%;
+  max-width:none;
   padding:16px 18px;
   border-radius:18px;
 }
+.login-brand-panel .protovia-signature{width:100%;margin:-6px 0 0;text-align:center}
+.login-brand-panel .customer-context{margin:0;max-width:100%}
 .login-environment{
   display:inline-flex;
   align-items:center;
@@ -545,8 +550,8 @@ button:disabled{opacity:.58;cursor:not-allowed}
   .login-screen{padding:14px}
   .login-shell{display:block;min-height:auto;border-radius:20px}
   .login-hero{min-height:auto;padding:22px}
-  .login-brand-panel{gap:11px;margin-bottom:22px}
-  .login-brand-panel .login-logo-wrap{width:205px;margin-bottom:0}
+  .login-brand-panel{gap:11px;margin-bottom:22px;width:205px}
+  .login-brand-panel .login-logo-wrap{width:100%;margin-bottom:0}
   .login-hero-copy h2{font-size:24px}
   .login-mini-list{display:none}
   .login-card{padding:27px 23px 30px}
@@ -1850,10 +1855,11 @@ label{font-size:11.5px;color:#34544f;margin-bottom:6px}
 
   .login-brand-panel{
     gap:10px!important;
+    width:170px!important;
   }
 
   .login-brand-panel .login-logo-wrap{
-    width:170px!important;
+    width:100%!important;
     margin-bottom:0!important;
   }
 
@@ -3602,7 +3608,7 @@ body.printing-protocol #printArea .print-items-v17:not(.has-competence):not(.has
       </form>
 
       <div class="login-foot">
-        Conexão com servidor interno Protovia
+        Conexão segura com a ProtoVia
       </div>
     </div>
 

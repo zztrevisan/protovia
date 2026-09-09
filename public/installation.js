@@ -14,6 +14,7 @@
       </div>
       <button class="restore-colors" type="button">Restaurar cores da ProtoVia</button>
       <label>Exibição da marca<select name="logoTamanho"><option value="grande">Cliente em destaque — logo grande</option><option value="compacto">Cliente compacto — logo menor e nome ao lado</option><option value="contexto">ProtoVia + cliente — identificação pequena do ambiente</option></select></label>
+      <label class="identity-toggle"><input name="mostrarContextoLogin" type="checkbox" checked><span><strong>Mostrar cliente na tela de login</strong><small>Exibe “Ambiente de” e o nome da organização antes da entrada. Desative para demonstrações sem identificar o cliente.</small></span></label>
       <div class="identity-preview" aria-label="Prévia das cores"><span></span><div><strong>Prévia do ambiente</strong><small>Marca principal e cor complementar</small></div></div>
     </div>
     <div id="installationCredentials">
@@ -27,7 +28,7 @@
   </form>`;
   document.body.append(overlay);
   const style = document.createElement('style');
-  style.textContent = '#installationDialog{width:min(560px,94vw);max-height:90vh;overflow:auto;border:1px solid #d7ece9;border-radius:16px;padding:26px;color:#15544a}#installationDialog::backdrop{background:#071936b8}#installationDialog label{display:block;margin:14px 0;font-size:13px}#installationDialog input,#installationDialog select{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid #b7dcd6;border-radius:6px;background:#fff;color:#173d37}#installationDialog .remove-logo{display:flex;align-items:center;gap:8px;font-weight:600}#installationDialog .remove-logo input{display:inline-block;width:17px;height:17px;margin:0;padding:0}#installationDialog input[type=color]{height:46px;padding:4px;cursor:pointer}.identity-colors{display:grid;grid-template-columns:1fr 1fr;gap:12px}.identity-preview{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px;border:1px solid #d7ece9;border-radius:12px;background:#f6fbfa}.identity-preview span{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--preview-primary),var(--preview-secondary));box-shadow:0 7px 18px color-mix(in srgb,var(--preview-primary),transparent 75%)}.identity-preview strong,.identity-preview small{display:block}.identity-preview small{margin-top:3px;color:#64847e}#installationError{color:#a61b1b}.installationActions{display:flex;gap:12px;justify-content:flex-end}@media(max-width:480px){.identity-colors{grid-template-columns:1fr}}';
+  style.textContent = '#installationDialog{width:min(560px,94vw);max-height:90vh;overflow:auto;border:1px solid #d7ece9;border-radius:16px;padding:26px;color:#15544a}#installationDialog::backdrop{background:#071936b8}#installationDialog label{display:block;margin:14px 0;font-size:13px}#installationDialog input,#installationDialog select{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid #b7dcd6;border-radius:6px;background:#fff;color:#173d37}#installationDialog .remove-logo,#installationDialog .identity-toggle{display:flex;align-items:flex-start;gap:10px;font-weight:600}#installationDialog .remove-logo input,#installationDialog .identity-toggle input{display:inline-block;width:17px;height:17px;margin:1px 0 0;padding:0;flex:0 0 auto}#installationDialog .identity-toggle{padding:12px;border:1px solid #d7ece9;border-radius:10px;background:#f6fbfa}#installationDialog .identity-toggle strong,#installationDialog .identity-toggle small{display:block}#installationDialog .identity-toggle small{margin-top:4px;color:#64847e;font-weight:400;line-height:1.4}#installationDialog input[type=color]{height:46px;padding:4px;cursor:pointer}.identity-colors{display:grid;grid-template-columns:1fr 1fr;gap:12px}.identity-preview{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px;border:1px solid #d7ece9;border-radius:12px;background:#f6fbfa}.identity-preview span{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,var(--preview-primary),var(--preview-secondary));box-shadow:0 7px 18px color-mix(in srgb,var(--preview-primary),transparent 75%)}.identity-preview strong,.identity-preview small{display:block}.identity-preview small{margin-top:3px;color:#64847e}#installationError{color:#a61b1b}.installationActions{display:flex;gap:12px;justify-content:flex-end}@media(max-width:480px){.identity-colors{grid-template-columns:1fr}}';
   document.head.append(style);
   style.textContent += '#installationDialog button{padding:10px 16px;border:1px solid #cbe5e1;border-radius:8px;background:#f1f9f8;color:#15544a;cursor:pointer;font-weight:600}#installationDialog button[type=submit]{background:#15544a;color:white}#installationDialog button:disabled{opacity:.6;cursor:wait}#installationDialog .restore-colors{width:100%;margin-top:-2px;background:#fff;color:#15544a}.organization-settings-button{margin:14px;padding:10px;border:1px solid #548c83;border-radius:8px;background:transparent;color:#fff;font-size:12px}';
   const form = document.getElementById('installationForm');
@@ -98,7 +99,11 @@
     document.querySelectorAll('[data-app-name]').forEach(el => { el.textContent=contextMode?'ProtoVia':customerName; });
     document.querySelectorAll('[data-customer-name-fallback]').forEach(el => { el.hidden=contextMode||(Boolean(data.logo)&&customerConfigured); el.textContent=customerName; });
     document.querySelectorAll('[data-product-fallback]').forEach(el => { el.hidden=customerConfigured&&!contextMode; });
-    document.querySelectorAll('[data-customer-context]').forEach(el => { el.hidden = !data.configured || !customerConfigured || (!contextMode&&!compactMode); });
+    document.querySelectorAll('[data-customer-context]').forEach(el => {
+      const hiddenByMode=!data.configured || !customerConfigured || (!contextMode&&!compactMode);
+      const hiddenOnLogin=Boolean(el.closest('#loginScreen')) && data.mostrarContextoLogin===false;
+      el.hidden=hiddenByMode||hiddenOnLogin;
+    });
     const appName=contextMode?'ProtoVia':customerName;
     document.querySelectorAll('[data-customer-monogram]').forEach(el => { el.textContent=appName.trim().charAt(0).toUpperCase()||'P'; });
     document.title=`${appName} Protocolos`;
@@ -110,6 +115,7 @@
     form.elements.corPrimaria.value=settings.corPrimaria||DEFAULT_PRIMARY;
     form.elements.corSecundaria.value=settings.corSecundaria||DEFAULT_SECONDARY;
     form.elements.logoTamanho.value=settings.logoTamanho||'grande';
+    form.elements.mostrarContextoLogin.checked=settings.mostrarContextoLogin!==false;
     form.elements.removerLogo.checked=false;
     updatePreview();
     document.getElementById('organizationIdentity').hidden = !settings.configured;
@@ -142,6 +148,7 @@
       body.corPrimaria=form.elements.corPrimaria.value||settings.corPrimaria||DEFAULT_PRIMARY;
       body.corSecundaria=form.elements.corSecundaria.value||settings.corSecundaria||DEFAULT_SECONDARY;
       body.logoTamanho=form.elements.logoTamanho.value||settings.logoTamanho||'grande';
+      body.mostrarContextoLogin=form.elements.mostrarContextoLogin.checked;
       const response = await fetch(settings.configured ? '/api/organization' : '/api/installation', {
         method: settings.configured ? 'PUT' : 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
       });

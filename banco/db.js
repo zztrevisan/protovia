@@ -402,6 +402,7 @@ db.exec('CREATE TABLE IF NOT EXISTS organizacao (id INTEGER PRIMARY KEY CHECK (i
 adicionarColunaSeNaoExistir('organizacao','cor_primaria',"TEXT NOT NULL DEFAULT '#0f6657'");
 adicionarColunaSeNaoExistir('organizacao','cor_secundaria',"TEXT NOT NULL DEFAULT '#19b89f'");
 adicionarColunaSeNaoExistir('organizacao','logo_tamanho',"TEXT NOT NULL DEFAULT 'grande'");
+adicionarColunaSeNaoExistir('organizacao','mostrar_contexto_login','INTEGER NOT NULL DEFAULT 1');
 db.exec("CREATE TABLE IF NOT EXISTS configuracao_entrega (id INTEGER PRIMARY KEY CHECK (id = 1), regras_json TEXT NOT NULL, alterado_por TEXT NOT NULL, alterado_em TEXT NOT NULL)");
 adicionarColunaSeNaoExistir('protocolos','entrega_evidencia_json','TEXT');
 for (const sql of require('../lib/pickups').SCHEMA) db.exec(sql);
